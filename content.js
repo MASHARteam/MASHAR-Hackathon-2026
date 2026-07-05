@@ -15,8 +15,8 @@
         alt: "צילום מסך של פורטל הגלים, המוזיקה והטכנולוגיה"
       },
       links: [
-        { label: "פתיחת האפליקציה", href: "https://aistudio.google.com/apps/b2853358-4d01-4885-98ec-1c5b7aca85cb?fullscreenApplet=true&showPreview=true&showAssistant=true" },
-        { label: "קוד מקומי", href: "Avi_G/" }
+        { label: "פתיחת האפליקציה", href: "https://ai.studio/apps/b2853358-4d01-4885-98ec-1c5b7aca85cb" },
+        { label: "קוד מקומי", href: "https://github.com/MASHARteam/MASHAR-Hackathon-2026/tree/master/Avi_G" }
       ],
       details: ["תוצר אינטראקטיבי המציג את נקודת המפגש בין מדע, צליל וטכנולוגיה."]
     },
@@ -104,8 +104,8 @@
         alt: "צילום מסך של מסלול הלמידה האישי של עודד בטר והצוות"
       },
       links: [
-        { label: "פתיחת האפליקציה", href: "https://aistudio.google.com/apps/d2418b12-a962-448f-92ca-14069d943e57?showAssistant=true&project=gen-lang-client-0150794773&showPreview=true" },
-        { label: "קוד מקומי", href: "Oded/" }
+        { label: "פתיחת האפליקציה", href: "https://ai.studio/apps/d2418b12-a962-448f-92ca-14069d943e57" },
+        { label: "קוד מקומי", href: "https://github.com/MASHARteam/MASHAR-Hackathon-2026/tree/master/Oded" }
       ],
       details: [
         "הפרויקט מיועד להנגיש, להתאים ולבנות מסלול הכשרה ולימודים תלת-שנתי אישי.",
@@ -161,18 +161,23 @@
     },
     {
       id: "inquiry-labs",
-      title: "חישוב מעבדות חקר",
+      title: "חידוש מעבדות חקר ישנות",
       owner: "דורה אתגר וטל ורדן",
       type: "תוצר חישובי",
-      summary: "כלי חישובי התומך בעבודה עם מעבדות חקר.",
-      tags: ["מעבדות", "חקר", "בקרוב"],
+      summary: "חידוש והנגשה של מעבדות חקר ישנות באמצעות גרסאות DOCX נוחות לעריכה ושימוש מחודש.",
+      tags: ["מעבדות", "חקר", "DOCX"],
       visual: {
         kind: "image",
         src: "public/assets/screenshots/Dora_Tal.jpeg",
-        alt: "תמונה מייצגת של פרויקט חישוב מעבדות חקר"
+        alt: "תמונה מייצגת של פרויקט חידוש מעבדות חקר ישנות"
       },
-      links: [],
-      details: ["תוצר הממוקד בחישוב, ניתוח ותמיכה בתהליכי מעבדה חקרנית.", "קישור או קובץ תוצר יתווסף לאחר שיישלחו החומרים."]
+      links: [
+        { label: "פתיחת קבצי DOCX", href: "https://mashar-my.sharepoint.com/:f:/g/personal/tal_verdene_wise_org_il/IgA0ARbnhk9lRaiLqaxyBPzgAQUjxkp3IGx8rh4FXYCjS6o?e=VJIvA4" }
+      ],
+      details: [
+        "חידוש מעבדות חקר ישנות והנגשתן מחדש לעבודה שוטפת בכיתה ובמעבדה.",
+        "התוצר כולל גרסאות DOCX לקבצי המעבדה, כדי לאפשר עריכה, התאמה ושימוש חוזר."
+      ]
     },
     {
       id: "inertia-cart",
@@ -198,14 +203,23 @@
     },
     {
       id: "asaf-wall",
-      title: "תוצר בקרוב",
+      title: "כלי למידה עצמאית",
       owner: "אסף וול",
-      type: "תוצר בהמשך",
-      summary: "ממתינים לקבלת קישור או קובץ תוצר.",
-      tags: ["בקרוב"],
-      visual: { kind: "poster", label: "+" },
-      links: [],
-      details: ["פרטי התוצר יתווספו לחלון הראווה כאשר יתקבלו חומרי המשך."]
+      type: "אפליקציית AI Studio",
+      summary: "כלי דיגיטלי ללמידה עצמאית המלווה תלמידים בתהליך לימוד ותרגול אישי.",
+      tags: ["למידה עצמאית", "AI Studio", "תרגול"],
+      visual: {
+        kind: "image",
+        src: "public/assets/screenshots/Assaf_wool.png",
+        alt: "צילום מסך של כלי למידה עצמאית"
+      },
+      links: [
+        { label: "פתיחת האפליקציה", href: "https://ai.studio/apps/57ea6d8a-81af-458f-8ee9-4da2b3d70a1e" }
+      ],
+      details: [
+        "כלי למידה עצמאית שנבנה ב-AI Studio ומיועד ללוות תלמידים בעבודה אישית.",
+        "הכרטיס משתמש בצילום מסך של התוצר וקישור ישיר לפתיחת האפליקציה."
+      ]
     }
   ],
   feedback: {
