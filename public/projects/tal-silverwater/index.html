@@ -1,0 +1,5170 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מתמטיקה לפיזיקה — תרגול וחזרה</title>
+<meta name="description" content="אפליקציית תרגול מתמטיקה לתלמידי פיזיקה, כיתות י׳-י״ב">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES & RESET
+   ═══════════════════════════════════════════════════ */
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: rgba(17, 24, 39, 0.7);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  --bg-glass-hover: rgba(255, 255, 255, 0.06);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-hover: rgba(255, 255, 255, 0.15);
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --accent-amber: #f59e0b;
+  --accent-amber-glow: rgba(245, 158, 11, 0.3);
+  --accent-amber-soft: rgba(245, 158, 11, 0.1);
+  --accent-teal: #14b8a6;
+  --accent-teal-glow: rgba(20, 184, 166, 0.3);
+  --accent-teal-soft: rgba(20, 184, 166, 0.1);
+  --accent-purple: #a78bfa;
+  --accent-purple-glow: rgba(167, 139, 250, 0.3);
+  --accent-blue: #3b82f6;
+  --accent-blue-glow: rgba(59, 130, 246, 0.3);
+  --accent-green: #22c55e;
+  --accent-green-glow: rgba(34, 197, 94, 0.3);
+  --accent-red: #ef4444;
+  --accent-red-glow: rgba(239, 68, 68, 0.3);
+
+  --gradient-amber: linear-gradient(135deg, #f59e0b, #d97706);
+  --gradient-teal: linear-gradient(135deg, #14b8a6, #0d9488);
+  --gradient-purple: linear-gradient(135deg, #a78bfa, #7c3aed);
+  --gradient-hero: linear-gradient(135deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-glow-amber: 0 0 20px var(--accent-amber-glow);
+  --shadow-glow-teal: 0 0 20px var(--accent-teal-glow);
+
+  --font-main: 'Heebo', sans-serif;
+  --transition-fast: 0.15s ease;
+  --transition-med: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(20, 184, 166, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+/* ═══════════════════════════════════════════════════
+   NAVBAR
+   ═══════════════════════════════════════════════════ */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: rgba(10, 14, 26, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.navbar-brand .icon {
+  font-size: 1.6rem;
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-user .user-name {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.navbar-user .user-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--gradient-teal);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ═══════════════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--gradient-amber);
+  color: #000;
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-amber);
+}
+
+.btn-secondary {
+  background: var(--bg-glass);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glass);
+}
+.btn-secondary:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-glass-hover);
+}
+
+.btn-teal {
+  background: var(--gradient-teal);
+  color: #000;
+}
+.btn-teal:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow-teal);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 8px 12px;
+}
+.btn-ghost:hover {
+  color: var(--text-primary);
+  background: var(--bg-glass);
+}
+
+.btn-icon {
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-icon:hover {
+  color: var(--text-primary);
+  border-color: var(--border-glass-hover);
+  background: var(--bg-glass-hover);
+}
+
+.btn-sm { padding: 6px 14px; font-size: 0.85rem; }
+.btn-lg { padding: 14px 28px; font-size: 1.05rem; }
+
+.btn-success { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; }
+.btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; }
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   CARDS
+   ═══════════════════════════════════════════════════ */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: all var(--transition-med);
+}
+
+.card:hover {
+  border-color: var(--border-glass-hover);
+  background: var(--bg-glass-hover);
+}
+
+.card-glow-amber:hover {
+  box-shadow: 0 0 30px rgba(245,158,11,0.1);
+  border-color: rgba(245,158,11,0.3);
+}
+.card-glow-teal:hover {
+  box-shadow: 0 0 30px rgba(20,184,166,0.1);
+  border-color: rgba(20,184,166,0.3);
+}
+.card-glow-purple:hover {
+  box-shadow: 0 0 30px rgba(167,139,250,0.1);
+  border-color: rgba(167,139,250,0.3);
+}
+
+/* ═══════════════════════════════════════════════════
+   SCREENS (Pages)
+   ═══════════════════════════════════════════════════ */
+.screen {
+  display: none;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.4s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════
+   WELCOME SCREEN
+   ═══════════════════════════════════════════════════ */
+.welcome-hero {
+  text-align: center;
+  padding: 48px 0 32px;
+}
+
+.welcome-hero h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #f59e0b, #a78bfa, #14b8a6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome-hero p {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.setup-card {
+  max-width: 420px;
+  margin: 32px auto;
+  text-align: center;
+}
+
+.setup-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: var(--accent-amber);
+}
+
+.input-group {
+  margin-bottom: 16px;
+  text-align: right;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+  direction: rtl;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent-amber);
+  box-shadow: 0 0 0 3px var(--accent-amber-soft);
+}
+
+select.input-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 12px center;
+  padding-left: 32px;
+}
+
+select.input-field option {
+  background-color: #1e293b; /* Dark background so white text is visible */
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════════
+   TOPIC GRID (HOME)
+   ═══════════════════════════════════════════════════ */
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.home-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.topic-card {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.topic-card .topic-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.topic-card .topic-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.topic-card .topic-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.topic-card .topic-progress {
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.topic-card .topic-progress-fill {
+  height: 100%;
+  background: var(--gradient-amber);
+  border-radius: 2px;
+  transition: width var(--transition-med);
+}
+
+.topic-card .topic-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* Homework section on home */
+.homework-section {
+  margin-top: 16px;
+}
+
+.homework-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: var(--accent-teal);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.homework-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.homework-input-row .input-field {
+  flex: 1;
+  direction: ltr;
+  text-align: left;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   PRACTICE SCREEN
+   ═══════════════════════════════════════════════════ */
+.practice-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.practice-header .back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.95rem;
+  background: none;
+  border: none;
+  font-family: var(--font-main);
+  transition: color var(--transition-fast);
+}
+.practice-header .back-btn:hover { color: var(--text-primary); }
+
+.practice-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.practice-meta .difficulty-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.difficulty-easy { background: var(--accent-green-glow); color: var(--accent-green); border: 1px solid var(--accent-green); }
+.difficulty-medium { background: var(--accent-amber-glow); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+.difficulty-hard { background: var(--accent-red-glow); color: var(--accent-red); border: 1px solid var(--accent-red); }
+
+.practice-meta .score-display {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.problem-card {
+  margin-bottom: 20px;
+}
+
+.problem-number {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.problem-question {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.5;
+  direction: ltr;
+  text-align: center;
+  padding: 20px;
+  background: var(--bg-glass);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+  font-family: 'Heebo', 'Segoe UI', sans-serif;
+}
+
+.problem-instruction {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.answer-section {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.answer-section .input-field {
+  flex: 1;
+  min-width: 200px;
+  font-size: 1.2rem;
+  text-align: center;
+  direction: ltr;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* Feedback */
+.feedback {
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  display: none;
+  animation: slideDown 0.3s ease;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feedback.correct {
+  display: block;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: var(--accent-green);
+}
+
+.feedback.incorrect {
+  display: block;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--accent-red);
+}
+
+/* Steps / Explanation */
+.steps-container {
+  margin-top: 16px;
+  display: none;
+}
+
+.steps-container.visible { display: block; }
+
+.steps-container h3 {
+  font-size: 1rem;
+  color: var(--accent-purple);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-item {
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: var(--bg-glass);
+  border-radius: var(--radius-sm);
+  border-right: 3px solid var(--accent-purple);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  animation: fadeIn 0.3s ease;
+}
+
+.step-item .step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--accent-purple-glow);
+  color: var(--accent-purple);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.step-item .step-math {
+  direction: ltr;
+  display: inline;
+  font-weight: 600;
+  color: var(--accent-amber);
+  unicode-bidi: embed;
+}
+
+/* ═══════════════════════════════════════════════════
+   DIFFICULTY SELECTOR (on practice screen)
+   ═══════════════════════════════════════════════════ */
+.difficulty-selector {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.difficulty-btn {
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid var(--border-glass);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.difficulty-btn:hover {
+  border-color: var(--border-glass-hover);
+  color: var(--text-primary);
+}
+
+.difficulty-btn.selected-easy {
+  border-color: var(--accent-green);
+  color: var(--accent-green);
+  background: var(--accent-green-glow);
+}
+.difficulty-btn.selected-medium {
+  border-color: var(--accent-amber);
+  color: var(--accent-amber);
+  background: var(--accent-amber-soft);
+}
+.difficulty-btn.selected-hard {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+  background: var(--accent-red-glow);
+}
+.difficulty-btn.selected-adaptive {
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
+  background: var(--accent-purple-glow);
+}
+
+/* ═══════════════════════════════════════════════════
+   TEACHER PANEL
+   ═══════════════════════════════════════════════════ */
+.teacher-login {
+  max-width: 380px;
+  margin: 60px auto;
+  text-align: center;
+}
+
+.teacher-login h2 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+.teacher-login p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.teacher-panel {
+  display: none;
+}
+.teacher-panel.active { display: block; }
+
+.teacher-panel h2 {
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hw-builder {
+  margin-bottom: 24px;
+}
+
+.hw-builder h3 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: var(--accent-teal);
+}
+
+.hw-topic-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.hw-topic-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 0.9rem;
+}
+
+.hw-topic-item:hover {
+  border-color: var(--border-glass-hover);
+}
+
+.hw-topic-item.selected {
+  border-color: var(--accent-teal);
+  background: var(--accent-teal-soft);
+}
+
+.hw-topic-item input[type="checkbox"] {
+  accent-color: var(--accent-teal);
+  width: 18px; height: 18px;
+}
+
+.hw-settings {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.hw-settings .input-group {
+  flex: 1;
+  min-width: 140px;
+}
+
+.generated-code {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--accent-teal);
+  border-radius: var(--radius-md);
+  display: none;
+}
+
+.generated-code .code-text {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  word-break: break-all;
+  background: rgba(0,0,0,0.3);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  margin: 8px 0;
+  direction: ltr;
+  text-align: left;
+  color: var(--accent-teal);
+  user-select: all;
+}
+
+/* ═══════════════════════════════════════════════════
+   PROGRESS / DASHBOARD SCREEN
+   ═══════════════════════════════════════════════════ */
+.dashboard h2 {
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 20px;
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.stat-card .stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.stat-amber .stat-value { color: var(--accent-amber); }
+.stat-teal .stat-value { color: var(--accent-teal); }
+.stat-purple .stat-value { color: var(--accent-purple); }
+.stat-green .stat-value { color: var(--accent-green); }
+
+.progress-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.progress-table th,
+.progress-table td {
+  padding: 12px 16px;
+  text-align: right;
+  border-bottom: 1px solid var(--border-glass);
+  font-size: 0.9rem;
+}
+
+.progress-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.progress-table td { color: var(--text-secondary); }
+.progress-table tr:hover td { color: var(--text-primary); }
+
+.accuracy-bar {
+  width: 80px;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.accuracy-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width var(--transition-med);
+}
+
+.export-section {
+  text-align: center;
+  padding: 24px;
+}
+
+/* ═══════════════════════════════════════════════════
+   MODAL / OVERLAY
+   ═══════════════════════════════════════════════════ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: modalPop 0.3s ease;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal h2 {
+  margin-bottom: 16px;
+  font-size: 1.3rem;
+}
+
+.modal .close-modal {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════
+   HOMEWORK ACTIVE BANNER
+   ═══════════════════════════════════════════════════ */
+.hw-active-banner {
+  display: none;
+  padding: 12px 20px;
+  background: rgba(20, 184, 166, 0.1);
+  border: 1px solid rgba(20, 184, 166, 0.3);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hw-active-banner.visible {
+  display: flex;
+}
+
+.hw-active-banner .hw-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+
+.hw-active-banner .hw-progress-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════
+   CONFETTI ANIMATION
+   ═══════════════════════════════════════════════════ */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 300;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: confettiFall 1.5s ease-out forwards;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════
+   SHAKE ANIMATION (wrong answer)
+   ═══════════════════════════════════════════════════ */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.shake { animation: shake 0.4s ease; }
+
+/* ═══════════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+   ═══════════════════════════════════════════════════ */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 250;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.toast {
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn var(--transition-fast) ease-out;
+}
+
+.modal-content {
+  max-width: 400px;
+  width: 90%;
+  animation: scaleIn var(--transition-fast) ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .welcome-hero h1 { font-size: 2rem; }
+  .topic-grid { grid-template-columns: 1fr; }
+  .problem-question { font-size: 1.3rem; padding: 16px; }
+  .answer-section { flex-direction: column; }
+  .navbar { padding: 10px 16px; }
+  .screen { padding: 20px 14px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .difficulty-selector { flex-direction: column; align-items: stretch; }
+  .hw-settings { flex-direction: column; }
+}
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════ NAVBAR ═══════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-brand" onclick="app.navigate('home')">
+    <span class="icon">🧮</span>
+    <span>מתמטיקה לפיזיקה</span>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-icon" onclick="app.openGuideModal()" title="מדריך כתיבה">📖</button>
+    <button class="btn-icon" onclick="app.navigate('progress')" title="מעקב התקדמות">📊</button>
+    <button class="btn-icon" onclick="app.navigate('teacher')" title="פאנל מורה">⚙️</button>
+  </div>
+  <div class="navbar-user" id="navUser" style="display:none; cursor:pointer" onclick="app.openUserModal()" title="אפשרויות משתמש">
+    <span class="user-name" id="navUserName"></span>
+    <div class="user-avatar" id="navUserAvatar"></div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════ USER MODAL ═══════════════════════ -->
+<div class="modal-backdrop" id="userModal" style="display:none" onclick="if(event.target===this) app.closeUserModal()">
+  <div class="modal-content card">
+    <h2 style="margin-bottom:16px; text-align:center">👤 תפריט תלמיד</h2>
+    <div style="margin:16px 0; text-align:center">
+      <div id="modalAvatar" class="user-avatar" style="width:64px; height:64px; font-size:2rem; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; background:var(--gradient-teal); color:#000; font-weight:700; border-radius:50%"></div>
+      <div id="modalName" style="font-size:1.3rem; font-weight:700"></div>
+      <div id="modalClass" style="color:var(--text-secondary); margin-top:4px"></div>
+    </div>
+    
+    <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px">
+      <button class="btn btn-primary" onclick="app.resetSolvedProblems()" style="justify-content:center">
+        🔄 אפס תרגילים שנפתרו
+      </button>
+      <button class="btn btn-secondary" onclick="app.logoutUser()" style="justify-content:center">
+        👤 החלף משתמש / התנתק
+      </button>
+      <button class="btn btn-ghost" onclick="app.closeUserModal()" style="justify-content:center">
+        סגור
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ GUIDE MODAL ═══════════════════════ -->
+<!-- ⚠️ MISTAKES MODAL ⚠️ -->
+<div class="modal-backdrop" id="mistakesModal" style="display:none; z-index:9999;" onclick="if(event.target===this) app.closeMistakesModal()">
+  <div class="modal-content card" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="margin-bottom:0; text-align:center; color: var(--accent-amber);">⚠️ טעויות נפוצות שכדאי להכיר</h2>
+      <button class="btn btn-secondary" onclick="app.closeMistakesModal()" style="padding:4px 8px;">✕</button>
+    </div>
+    <div id="mistakesList" class="steps-container visible" style="margin-top:0;">
+    </div>
+    <button class="btn btn-primary" style="margin-top:20px; width:100%;" onclick="app.closeMistakesModal()">הבנתי, תודה!</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="guideModal" style="display:none; z-index:9999;" onclick="if(event.target===this) app.closeGuideModal()">
+  <div class="modal-content card" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+    <h2 style="margin-bottom:16px; text-align:center; color: var(--accent-teal);">📖 מדריך כתיבה במערכת</h2>
+    
+    <div style="margin-bottom: 24px; line-height: 1.6;">
+      <h3 style="color: var(--accent-amber); margin-bottom: 8px;">1. כתיבה בסיסית וסימנים</h3>
+      <p>המערכת מבינה כתיבה מתמטית סטנדרטית, והרווחים בין איברים אינם משנים את התוצאה.</p>
+      <ul style="margin-right: 20px; margin-top: 8px; list-style-type: disc;">
+        <li><strong>חיבור וחיסור:</strong> <code>x + 5</code> , <code>y - 3</code></li>
+        <li><strong>כפל:</strong> ניתן להשתמש בכוכבית <code>*</code>, באות <code>x</code> קטנה, או פשוט לכתוב איברים צמודים: <code>5*x</code> , <code>5x</code> , <code>v*t</code></li>
+        <li><strong>חילוק (שברים):</strong> השתמשו בלוכסן <code>/</code>. למשל: <code>m/v</code> או <code>(x+2)/3</code></li>
+        <li><strong>חזקות:</strong> השתמשו בסימן כובע <code>^</code>. למשל: <code>x^2</code> או <code>v^2</code></li>
+        <li><strong>שורש ריבועי:</strong> השתמשו במילה <code>sqrt</code> וסוגריים סביב הביטוי. למשל: <code>sqrt(x)</code> או <code>sqrt(2*E/m)</code></li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom: 24px; line-height: 1.6;">
+      <h3 style="color: var(--accent-amber); margin-bottom: 8px;">2. אותיות יווניות (בפיזיקה)</h3>
+      <p>הקלידו את שם האות באנגלית, והמערכת תתרגם אותן אוטומטית לבדיקה.</p>
+      <ul style="margin-right: 20px; margin-top: 8px; list-style-type: disc;">
+        <li><code style="font-family:serif;">π</code> - הקלידו: <strong>pi</strong> (עבור Π גדולה: <strong>Pi</strong>)</li>
+        <li><code style="font-family:serif;">Δ</code> - הקלידו: <strong>Delta</strong> (עבור δ קטנה: <strong>delta</strong>)</li>
+        <li><code style="font-family:serif;">ρ</code> - הקלידו: <strong>rho</strong></li>
+        <li><code style="font-family:serif;">α, β, γ</code> - הקלידו: <strong>alpha, beta, gamma</strong></li>
+        <li><code style="font-family:serif;">θ</code> - הקלידו: <strong>theta</strong></li>
+      </ul>
+      <p style="background: var(--bg-glass); padding: 8px; border-radius: 4px; margin-top: 8px; font-size: 0.9rem;">
+        <em>דוגמה:</em> עבור הנוסחה <span dir="ltr">T = 2pi*sqrt(m/k)</span> (עם פי), תוכלו לכתוב <code>2*pi</code>
+      </p>
+    </div>
+
+    <div style="margin-bottom: 24px; line-height: 1.6;">
+      <h3 style="color: var(--accent-amber); margin-bottom: 8px;">3. עיצוב התשובה הסופית</h3>
+      <ul style="margin-right: 20px; margin-top: 8px; list-style-type: disc;">
+        <li><strong>משוואות פשוטות:</strong> אם השאלה היא "פתרו: 5x = 10", אפשר לכתוב פשוט <code>2</code> או <code>x=2</code>.</li>
+        <li><strong>בידוד משתנה:</strong> כשהשאלה מבקשת לבודד משתנה, אפשר לכתוב רק את הביטוי עצמו, למשל: <code>x/v</code>, או את המשוואה המלאה <code>t = x/v</code>.</li>
+        <li><strong>אותיות רישיות (Case Sensitivity):</strong> בפיזיקה יש הבדל בין T (זמן מחזור) ל-t (זמן). הקפידו לכתוב בדיוק כמו בשאלה.</li>
+      </ul>
+    </div>
+
+    <div style="display:flex; justify-content:center; margin-top:16px;">
+      <button class="btn btn-primary" onclick="app.closeGuideModal()">הבנתי, תודה!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TOAST CONTAINER ═══════════════════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══════════════════ WELCOME SCREEN ═══════════════════ -->
+<div class="screen active" id="screenWelcome">
+  <div class="welcome-hero">
+    <h1>מתמטיקה לפיזיקה</h1>
+    <p>תרגול וחזרה על מיומנויות המתמטיקה הדרושות לפיזיקה — כיתות י׳ עד י״ב</p>
+  </div>
+  <div class="card setup-card" id="setupCard">
+    <h2>👋 ברוכים הבאים!</h2>
+    <div class="input-group">
+      <label for="studentName">שם מלא</label>
+      <input type="text" class="input-field" id="studentName" placeholder="הכנס את שמך המלא">
+    </div>
+    <div class="input-group">
+      <label for="studentClass">כיתה</label>
+      <select class="input-field" id="studentClass">
+        <option value="">בחר כיתה</option>
+        <option value="י׳">י׳</option>
+        <option value="י״א">י״א</option>
+        <option value="י״ב">י״ב</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-lg" onclick="app.startApp()" style="width:100%; margin-top:12px; justify-content:center">
+      🚀 בואו נתחיל!
+    </button>
+
+    <div style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px; text-align: center;">
+      <p style="font-size:0.9rem; color:#666; margin-bottom:12px;">כבר יש לך קובץ שמירה?</p>
+      <button class="btn btn-secondary" onclick="document.getElementById('importSaveInput').click()" style="width: 100%;">טען התקדמות מקובץ</button>
+      <input type="file" id="importSaveInput" style="display:none" accept=".json" onchange="app.importSave(event)">
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════ HOME SCREEN ═══════════════════ -->
+<div class="screen" id="screenHome">
+  <div class="home-header">
+    <h2>שלום, <span id="welcomeName">תלמיד</span>! 📚 בחר נושא לתרגול</h2>
+  </div>
+
+  <!-- Homework banner -->
+  <div class="hw-active-banner" id="hwBanner">
+    <div class="hw-info">
+      <span>📝</span>
+      <span id="hwBannerTitle">שיעורי בית פעילים</span>
+    </div>
+    <div class="hw-progress-text" id="hwBannerProgress"></div>
+    <button class="btn btn-sm btn-teal" onclick="app.clearHomework()">סיים שיעורי בית</button>
+  </div>
+
+  <div class="topic-grid" id="topicGrid">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="homework-section card">
+    <h3>📝 טעינת שיעורי בית</h3>
+    <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px">
+      קיבלת קוד שיעורי בית מהמורה? הדבק אותו כאן:
+    </p>
+    <div class="homework-input-row">
+      <input type="text" class="input-field" id="hwCodeInput" placeholder="הדבק קוד שיעורי בית כאן...">
+      <button class="btn btn-teal" onclick="app.loadHomework()">טען</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PRACTICE SCREEN ═══════════════════ -->
+<div class="screen" id="screenPractice">
+  <div class="practice-header">
+    <div style="display:flex; align-items:center; gap: 1rem;">
+      <button class="back-btn" onclick="app.navigate('home')">
+        → חזרה לנושאים
+      </button>
+      <button class="btn btn-teal btn-sm" id="hwExportBtn" onclick="app.exportActiveHomework()" style="display:none; padding: 0.25rem 0.75rem; font-size: 0.85rem;">
+        📥 ייצוא דוח למורה
+      </button>
+    </div>
+    <div class="practice-meta">
+      <span class="difficulty-badge" id="currentDiffBadge"></span>
+      <span class="score-display" id="scoreDisplay"></span>
+    </div>
+  </div>
+
+  <h2 id="practiceTitle" style="text-align:center; margin-bottom:16px"></h2>
+
+  <!-- Difficulty Selector -->
+  <div class="difficulty-selector" id="diffSelector">
+    <button class="difficulty-btn" onclick="app.setDifficulty('adaptive')">אדפטיבי (אוטומטי)</button>
+    <button class="difficulty-btn" onclick="app.setDifficulty('easy')">קל</button>
+    <button class="difficulty-btn" onclick="app.setDifficulty('medium')">בינוני</button>
+    <button class="difficulty-btn" onclick="app.setDifficulty('hard')">מתקדם</button>
+  </div>
+
+  <!-- Problem Display -->
+  <div class="card problem-card" id="problemCard">
+    <div class="problem-number" id="problemNumber"></div>
+    <div class="problem-instruction" id="problemInstruction"></div>
+    <div class="problem-question" id="problemQuestion"></div>
+
+    <ul id="stepHistory" class="step-history"></ul>
+    <div class="answer-section">
+      <input type="text" class="input-field" id="answerInput"
+             placeholder="הכנס תשובה או שלב ביניים..." dir="ltr"
+             onkeydown="app.handleKeyDown(event)">
+      <button class="btn btn-primary" onclick="app.checkAnswer()">בדוק ✓</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="action-buttons">
+      <button class="btn btn-secondary" onclick="app.showMistakes()" id="mistakesBtn" style="display:none; color: var(--accent-amber);">⚠️ טעויות נפוצות</button>
+      <button class="btn btn-secondary" onclick="app.showHint()" id="hintBtn">💡 רמז</button>
+      <button class="btn btn-secondary" onclick="app.showFullSolution()" id="solutionBtn">📖 הצג פתרון מלא</button>
+      <button class="btn btn-ghost" onclick="app.nextProblem()" id="nextBtn" style="display:none">
+        תרגיל הבא ←
+      </button>
+    </div>
+
+    <div class="steps-container" id="stepsContainer">
+      <h3>📖 פתרון מפורט</h3>
+      <div id="stepsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TEACHER SCREEN ═══════════════════ -->
+<div class="screen" id="screenTeacher">
+  <!-- Teacher Login -->
+  <div class="teacher-login card" id="teacherLogin">
+    <h2>⚙️ פאנל מורה</h2>
+    <p>הכנס את סיסמת המורה כדי ליצור שיעורי בית</p>
+    <div class="input-group">
+      <label for="teacherPass">סיסמה</label>
+      <input type="password" class="input-field" id="teacherPass" placeholder="הכנס סיסמה"
+             onkeydown="if(event.key==='Enter') app.teacherLogin()">
+    </div>
+    <button class="btn btn-primary" onclick="app.teacherLogin()" style="width:100%; margin-top:12px; justify-content:center">
+      כניסה
+    </button>
+    <p style="margin-top:12px; font-size:0.8rem; color:var(--text-muted)">
+      סיסמת ברירת מחדל: teacher123
+    </p>
+  </div>
+
+  <!-- Teacher Panel (hidden until login) -->
+  <div class="teacher-panel" id="teacherPanel">
+    <h2>⚙️ יצירת שיעורי בית</h2>
+
+    <div class="hw-builder card">
+      <h3>📋 בחר נושאים</h3>
+      <div class="hw-topic-list" id="hwTopicList">
+        <!-- Populated by JS -->
+      </div>
+
+      <h3 style="margin-top:16px">⚙️ הגדרות</h3>
+      <div class="hw-settings">
+        <div class="input-group">
+          <label>מספר תרגילים לכל נושא</label>
+          <input type="number" class="input-field" id="hwNumProblems" value="5" min="1" max="20">
+        </div>
+        <div class="input-group">
+          <label>רמת קושי</label>
+          <select class="input-field" id="hwDifficulty">
+            <option value="easy">קל</option>
+            <option value="medium" selected>בינוני</option>
+            <option value="hard">מתקדם</option>
+            <option value="mixed">מעורב</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>כותרת (אופציונלי)</label>
+          <input type="text" class="input-field" id="hwTitle" placeholder="למשל: שיעורי בית - פרק 3">
+        </div>
+      </div>
+
+      <button class="btn btn-teal btn-lg" onclick="app.generateHomeworkCode()" style="width:100%; justify-content:center">
+        🔑 צור קוד שיעורי בית
+      </button>
+
+      <div class="generated-code" id="generatedCode">
+        <p style="font-weight:600; color:var(--accent-teal)">✅ הקוד נוצר! שתף אותו עם התלמידים:</p>
+        <div class="code-text" id="codeText"></div>
+        <button class="btn btn-sm btn-secondary" onclick="app.copyCode()">📋 העתק קוד</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PROGRESS / DASHBOARD SCREEN ═══════════════════ -->
+<div class="screen" id="screenProgress">
+  <div class="dashboard">
+    <div class="home-header">
+      <h2>📊 מעקב התקדמות</h2>
+      <button class="back-btn" onclick="app.navigate('home')" style="background:none;border:none;cursor:pointer;color:var(--text-secondary);font-family:var(--font-main);font-size:0.95rem">
+        → חזרה
+      </button>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="card stat-card stat-amber">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">תרגילים שנפתרו</div>
+      </div>
+      <div class="card stat-card stat-green">
+        <div class="stat-value" id="statCorrect">0</div>
+        <div class="stat-label">תשובות נכונות</div>
+      </div>
+      <div class="card stat-card stat-teal">
+        <div class="stat-value" id="statAccuracy">0%</div>
+        <div class="stat-label">אחוז הצלחה</div>
+      </div>
+      <div class="card stat-card stat-purple">
+        <div class="stat-value" id="statHints">0</div>
+        <div class="stat-label">רמזים ששימשו</div>
+      </div>
+    </div>
+
+    <div class="card" style="overflow-x:auto">
+      <h3 style="margin-bottom:12px; color:var(--accent-amber)">פירוט לפי נושא</h3>
+      <table class="progress-table" id="progressTable">
+        <thead>
+          <tr>
+            <th>נושא</th>
+            <th>נפתרו</th>
+            <th>נכונים</th>
+            <th>אחוז הצלחה</th>
+            <th>רמזים</th>
+          </tr>
+        </thead>
+        <tbody id="progressTableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-container" id="struggledProblemsContainer" style="display:none; margin-top:24px;">
+      <h3 style="color:var(--accent-red); margin-bottom:12px;">נקודות קושי (תרגילים שדרשו יותר מניסיון אחד)</h3>
+      <table class="progress-table">
+        <thead>
+          <tr>
+            <th>נושא</th>
+            <th>שאלה</th>
+            <th>ניסיונות</th>
+            <th>נפתר בסוף?</th>
+          </tr>
+        </thead>
+        <tbody id="struggledProblemsBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="export-section card" style="margin-top:16px">
+      <h3 style="margin-bottom:12px; color:var(--accent-teal)">📤 ייצוא דוח למורה</h3>
+      <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:16px">
+        הורד קובץ סיכום בפורמטים שונים ושלח למורה
+      </p>
+      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap">
+        <button class="btn btn-teal" onclick="app.exportMarkdown()">📥 הורד קובץ MD</button>
+        <button class="btn btn-primary" onclick="app.exportText()">📥 הורד קובץ TXT</button>
+        <button class="btn btn-success" onclick="app.exportExcel()">📥 הורד קובץ Excel (CSV)</button>
+        <button class="btn btn-secondary" onclick="app.copyExport()">📋 העתק ללוח</button>
+      </div>
+    </div>
+
+    <div class="export-section card" style="margin-top:16px">
+      <h3>שמירת התקדמות למחשב</h3>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:12px;">שמור את ההתקדמות שלך כדי להמשיך מאוחר יותר.</p>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button class="btn btn-secondary" onclick="app.exportSave()">שמור התקדמות לקובץ (.json)</button>
+      </div>
+    </div>
+
+
+    
+
+
+    <div class="export-section card" style="margin-top:16px">
+      <h3 style="margin-bottom:12px; color:var(--accent-red)">🗑️ איפוס נתונים</h3>
+      <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:16px">
+        מחק את כל נתוני ההתקדמות (פעולה זו אינה הפיכה!)
+      </p>
+      <button class="btn btn-danger btn-sm" onclick="app.resetProgress()">🗑️ אפס הכל</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════ -->
+<script>
+
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+        alert("JS Error: " + msg + "\nLine: " + lineNo + "\nCol: " + columnNo);
+        return false;
+    };
+    
+
+
+
+// ═══════════════════════════════════════════════════
+// UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function randChoice(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+function randIntNonZero(min, max) {
+  let n;
+  do { n = randInt(min, max); } while (n === 0);
+  return n;
+}
+function gcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { [a, b] = [b, a % b]; }
+  return a;
+}
+function simplifyFraction(num, den) {
+  if (den === 0) return { num, den };
+  const sign = den < 0 ? -1 : 1;
+  num *= sign; den *= sign;
+  const g = gcd(Math.abs(num), Math.abs(den));
+  return { num: num / g, den: den / g };
+}
+function fractionStr(num, den) {
+  const s = simplifyFraction(num, den);
+  if (s.den === 1) return `${s.num}`;
+  return `${s.num}/${s.den}`;
+}
+function formatCoeff(c, isFirst, varName) {
+  if (c === 0) return '';
+  let str = '';
+  if (isFirst) {
+    if (c === 1) str = varName;
+    else if (c === -1) str = '-' + varName;
+    else str = c + varName;
+  } else {
+    if (c === 1) str = ' + ' + varName;
+    else if (c === -1) str = ' - ' + varName;
+    else if (c > 0) str = ' + ' + c + varName;
+    else str = ' - ' + Math.abs(c) + varName;
+  }
+  return str;
+}
+
+// ═══════════════════════════════════════════════════
+// TOPIC DEFINITIONS
+// ═══════════════════════════════════════════════════
+const TOPICS = [
+  {
+    id: 'arithmetic',
+    name: 'חשבון בסיסי עם משתנים',
+    icon: '🔤',
+    desc: 'פישוט ביטויים אלגבריים עם משתנים',
+    color: 'amber'
+  },
+  {
+    id: 'linear',
+    name: 'משוואות ממעלה ראשונה',
+    icon: '📐',
+    desc: 'פתרון משוואות מהצורה ax + b = c',
+    color: 'teal'
+  },
+  {
+    id: 'isolate',
+    name: 'בידוד משתנה מנוסחה',
+    icon: '🔬',
+    desc: 'בידוד משתנה מנוסחאות פיזיקה',
+    color: 'purple'
+  },
+  {
+    id: 'fractions',
+    name: 'שברים ושברים אלגבריים',
+    icon: '🔢',
+    desc: 'חיבור, חיסור, כפל וחילוק שברים',
+    color: 'amber'
+  },
+  {
+    id: 'powers',
+    name: 'חזקות ושורשים',
+    icon: '⚡',
+    desc: 'חוקי חזקות, שורשים ופישוט ביטויים',
+    color: 'teal'
+  },
+  {
+    id: 'scientific',
+    name: 'סימון מדעי',
+    icon: '🔭',
+    desc: 'המרה וחישובים בסימון מדעי',
+    color: 'purple'
+  },
+  {
+    id: 'ratios',
+    name: 'יחס ופרופורציה',
+    icon: '⚖️',
+    desc: 'חישובי יחסים ופרופורציות',
+    color: 'amber'
+  },
+  {
+    id: 'systems',
+    name: 'מערכת משוואות',
+    icon: '🔗',
+    desc: 'פתרון מערכת של שתי משוואות עם שני נעלמים',
+    color: 'teal'
+  },
+  {
+    id: 'quadratic',
+    name: 'משוואות ריבועיות',
+    icon: '📈',
+    desc: 'פתרון משוואות מהצורה ax² + bx + c = 0',
+    color: 'purple'
+  },
+  {
+    id: 'inequalities',
+    name: 'אי-שוויונות',
+    icon: '↔️',
+    desc: 'פתרון אי-שוויונות ליניאריים',
+    color: 'amber'
+  },
+  {
+    id: 'trigonometry',
+    name: 'טריגונומטריה בסיסית',
+    icon: '📐',
+    desc: 'sin, cos, tan — זוויות ומשולשים ישרי-זווית',
+    color: 'teal'
+  }
+];
+
+const DIFFICULTY_NAMES = { easy: 'קל', medium: 'בינוני', hard: 'מתקדם' };
+
+// ═══════════════════════════════════════════════════
+// PROBLEM GENERATORS
+// ═══════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════
+// PHYSICS FORMULA DATABASE FOR VARIABLE ISOLATION
+// ═══════════════════════════════════════════════════
+const FORMULA_DB = [
+  {
+    formula: 'W = F × d', target: 'F', difficulty: 'easy',
+    answer: 'F = W / d', acceptable: ['F=W/d', 'W/d'],
+    steps: ['נחלק ב-d: F = W / d'], hints: ['חלק ב-d.']
+  },
+  {
+    formula: 'W = F × d', target: 'd', difficulty: 'easy',
+    answer: 'd = W / F', acceptable: ['d=W/F', 'W/F'],
+    steps: ['נחלק ב-F: d = W / F'], hints: ['חלק ב-F.']
+  },
+  {
+    formula: 'Q = C × V', target: 'C', difficulty: 'easy',
+    answer: 'C = Q / V', acceptable: ['C=Q/V', 'Q/V'],
+    steps: ['נחלק ב-V: C = Q / V'], hints: ['חלק ב-V.']
+  },
+  {
+    formula: 'Q = C × V', target: 'V', difficulty: 'easy',
+    answer: 'V = Q / C', acceptable: ['V=Q/C', 'Q/C'],
+    steps: ['נחלק ב-C: V = Q / C'], hints: ['חלק ב-C.']
+  },
+  {
+    formula: 'I = q / t', target: 'q', difficulty: 'easy',
+    answer: 'q = I × t', acceptable: ['q=I*t', 'q=It', 'I*t', 'It'],
+    steps: ['נכפול ב-t: q = I × t'], hints: ['כפול ב-t.']
+  },
+  {
+    formula: 'x = x₀ + v × t', target: 't', difficulty: 'medium',
+    answer: 't = (x - x₀) / v', acceptable: ['t=(x-x0)/v', '(x-x0)/v', 't=(x-x₀)/v', '(x-x₀)/v'],
+    steps: ['נחסר x₀: x - x₀ = v × t', 'נחלק ב-v: t = (x - x₀) / v'], hints: ['חסר x₀ ואז חלק ב-v.']
+  },
+  {
+    formula: 'Δv = a × t', target: 'a', difficulty: 'medium',
+    answer: 'a = Δv / t', acceptable: ['a=Deltav/t', 'a=Δv/t', 'Deltav/t', 'Δv/t'],
+    steps: ['נחלק ב-t: a = Δv / t'], hints: ['חלק את האגף השני ב-t. (השתמש ב-delta עבור Δ)']
+  },
+  {
+    formula: 'Δv = a × t', target: 't', difficulty: 'medium',
+    answer: 't = Δv / a', acceptable: ['t=Deltav/a', 't=Δv/a', 'Deltav/a', 'Δv/a'],
+    steps: ['נחלק ב-a: t = Δv / a'], hints: ['חלק את האגף השני ב-a. (השתמש ב-delta עבור Δ)']
+  },
+  {
+    formula: 'P = I × V', target: 'V', difficulty: 'medium',
+    answer: 'V = P / I', acceptable: ['V=P/I', 'P/I'],
+    steps: ['נחלק ב-I: V = P / I'], hints: ['חלק ב-I.']
+  },
+  {
+    formula: 'F = B × I × L', target: 'B', difficulty: 'medium',
+    answer: 'B = F / (I × L)', acceptable: ['B=F/(I*L)', 'B=F/(IL)', 'F/(I*L)', 'F/(IL)'],
+    steps: ['נחלק במכפלה של I ו-L: B = F / (I × L)'], hints: ['חלק את F במכפלה של I ו-L.']
+  },
+  {
+    formula: 'F = B × I × L', target: 'I', difficulty: 'medium',
+    answer: 'I = F / (B × L)', acceptable: ['I=F/(B*L)', 'I=F/(BL)', 'F/(B*L)', 'F/(BL)'],
+    steps: ['נחלק במכפלה של B ו-L: I = F / (B × L)'], hints: ['חלק את F במכפלה של B ו-L.']
+  },
+  {
+    formula: 'E = V / d', target: 'd', difficulty: 'medium',
+    answer: 'd = V / E', acceptable: ['d=V/E', 'V/E'],
+    steps: ['נכפול ב-d: E × d = V', 'נחלק ב-E: d = V / E'], hints: ['כפול ב-d ואז חלק ב-E.']
+  },
+  {
+    formula: 'F = E × q', target: 'E', difficulty: 'medium',
+    answer: 'E = F / q', acceptable: ['E=F/q', 'F/q'],
+    steps: ['נחלק ב-q: E = F / q'], hints: ['חלק את האגף השני ב-q.']
+  },
+  {
+    formula: 'K = p² / (2 × m)', target: 'p', difficulty: 'hard',
+    answer: 'p = √(2 × m × K)', acceptable: ['p=sqrt(2*m*K)', 'p=√(2*m*K)', 'sqrt(2*m*K)', '√(2*m*K)'],
+    steps: ['נכפול ב-2m: p² = 2 × m × K', 'נוציא שורש ריבועי: p = √(2 × m × K)'], hints: ['כפול במכנה 2m והוצא שורש.']
+  },
+  {
+    formula: 'K = p² / (2 × m)', target: 'm', difficulty: 'hard',
+    answer: 'm = p² / (2 × K)', acceptable: ['m=p^2/(2*K)', 'm=p²/(2*K)', 'p^2/(2*K)', 'p²/(2*K)'],
+    steps: ['נכפול ב-2m: 2 × m × K = p²', 'נחלק ב-2K: m = p² / (2 × K)'], hints: ['כפול במכנה 2m ואז חלק ב-2K.']
+  },
+  {
+    formula: 'T = 2π√(m / k)', target: 'm', difficulty: 'hard',
+    answer: 'm = k(T / 2π)²', acceptable: ['m=k*(T/(2*pi))^2', 'm=k*(T/2pi)^2', 'k*(T/(2*pi))^2', 'k(T/2π)²'],
+    steps: ['נחלק ב-2π: T / 2π = √(m / k)', 'נעלה בריבוע: (T / 2π)² = m / k', 'נכפול ב-k: m = k(T / 2π)²'], hints: ['חלק ב-2π, העלה בריבוע, ואז כפול ב-k. (השתמש ב-pi)']
+  },
+  {
+    formula: 'T = 2π√(m / k)', target: 'k', difficulty: 'hard',
+    answer: 'k = 4π²m / T²', acceptable: ['k=4*pi^2*m/T^2', 'k=4π²m/T²', '4π²m/T²', '4*pi^2*m/T^2'],
+    steps: ['נחלק ב-2π: T / 2π = √(m / k)', 'נעלה בריבוע: (T / 2π)² = m / k', 'נכפול ב-k ונחלק בביטוי בריבוע: k = m / (T / 2π)² = 4π²m / T²'], hints: ['חלק ב-2π, העלה בריבוע. k נמצא במכנה אז הוא מתחלף עם האגף השני.']
+  },
+  {
+    formula: 'R = ρ × L / A', target: 'A', difficulty: 'hard',
+    answer: 'A = ρ × L / R', acceptable: ['A=rho*L/R', 'A=ρ*L/R', 'rho*L/R', 'ρ*L/R'],
+    steps: ['נכפול ב-A: R × A = ρ × L', 'נחלק ב-R: A = ρ × L / R'], hints: ['כפול ב-A ואז חלק ב-R. (השתמש ב-rho עבור ρ)']
+  },
+  {
+    formula: 'R = ρ × L / A', target: 'L', difficulty: 'hard',
+    answer: 'L = R × A / ρ', acceptable: ['L=R*A/rho', 'L=R*A/ρ', 'R*A/rho', 'R*A/ρ'],
+    steps: ['נכפול ב-A: R × A = ρ × L', 'נחלק ב-ρ: L = R × A / ρ'], hints: ['כפול ב-A ואז חלק ב-ρ. (השתמש ב-rho עבור ρ)']
+  },
+  {
+    formula: 'v = √(G × M / R)', target: 'M', difficulty: 'hard',
+    answer: 'M = v² × R / G', acceptable: ['M=v^2*R/G', 'M=v²*R/G', 'v^2*R/G', 'v²*R/G'],
+    steps: ['נעלה בריבוע משני האגפים: v² = G × M / R', 'נכפול ב-R: v² × R = G × M', 'נחלק ב-G: M = v² × R / G'], hints: ['העלה בריבוע כדי לבטל את השורש, כפול ב-R וחלק ב-G.']
+  },
+  {
+    formula: 'v = √(G × M / R)', target: 'R', difficulty: 'hard',
+    answer: 'R = G × M / v²', acceptable: ['R=G*M/v^2', 'R=G*M/v²', 'G*M/v^2', 'G*M/v²'],
+    steps: ['נעלה בריבוע: v² = G × M / R', 'נכפול ב-R: v² × R = G × M', 'נחלק ב-v²: R = G × M / v²'], hints: ['העלה בריבוע. R במכנה אז החלף אותו עם v².']
+  },
+  // EASY
+  {
+    formula: 'F = m × a',
+    target: 'm',
+    difficulty: 'easy',
+    answer: 'm = F / a',
+    acceptable: ['m=F/a', 'F/a', 'F/a'],
+    steps: ['הנוסחה המקורית: F = m × a', 'אנו רוצים לבודד את m.', 'נחלק את שני אגפי המשוואה ב-a:', 'F / a = m', 'התשובה: m = F / a'],
+    hints: ['המשתנה m מוכפל ב-a.', 'כדי לבודד אותו, חלק את שני האגפים ב-a.']
+  },
+  {
+    formula: 'F = m × a',
+    target: 'a',
+    difficulty: 'easy',
+    answer: 'a = F / m',
+    acceptable: ['a=F/m', 'F/m'],
+    steps: ['הנוסחה המקורית: F = m × a', 'אנו רוצים לבודד את a.', 'נחלק את שני אגפי המשוואה ב-m:', 'F / m = a', 'התשובה: a = F / m'],
+    hints: ['המשתנה a מוכפל ב-m.', 'כדי לבודד אותו, חלק את שני האגפים ב-m.']
+  },
+  {
+    formula: 'v = d / t',
+    target: 'd',
+    difficulty: 'easy',
+    answer: 'd = v × t',
+    acceptable: ['d=v*t', 'd=vt', 'v*t', 'vt', 'v × t'],
+    steps: ['הנוסחה המקורית: v = d / t', 'אנו רוצים לבודד את d.', 'נכפול את שני אגפי המשוואה ב-t:', 'v × t = d', 'התשובה: d = v × t'],
+    hints: ['המשתנה d מחולק ב-t.', 'כדי לבטל את החילוק ולבודד את d, כפול את שני האגפים ב-t.']
+  },
+  {
+    formula: 'v = d / t',
+    target: 't',
+    difficulty: 'easy',
+    answer: 't = d / v',
+    acceptable: ['t=d/v', 'd/v'],
+    steps: ['הנוסחה המקורית: v = d / t', 'אנו רוצים לבודד את t.', 'נכפול את שני אגפי המשוואה ב-t כדי להעבירו למונה: v × t = d', 'כעת נחלק את שני אגפי המשוואה ב-v:', 't = d / v', 'התשובה: t = d / v'],
+    hints: ['המשתנה t נמצא במכנה.', 'כדי להעלות אותו למונה, כפול את שני האגפים ב-t ואז חלק ב-v.']
+  },
+  {
+    formula: 'p = m × v',
+    target: 'm',
+    difficulty: 'easy',
+    answer: 'm = p / v',
+    acceptable: ['m=p/v', 'p/v'],
+    steps: ['הנוסחה המקורית: p = m × v', 'אנו רוצים לבודד את m.', 'נחלק את שני אגפי המשוואה ב-v:', 'p / v = m', 'התשובה: m = p / v'],
+    hints: ['המשתנה m מוכפל ב-v.', 'חלק את שני האגפים ב-v כדי לבודד את m.']
+  },
+  {
+    formula: 'p = m × v',
+    target: 'v',
+    difficulty: 'easy',
+    answer: 'v = p / m',
+    acceptable: ['v=p/m', 'p/m'],
+    steps: ['הנוסחה המקורית: p = m × v', 'אנו רוצים לבודד את v.', 'נחלק את שני אגפי המשוואה ב-m:', 'p / m = v', 'התשובה: v = p / m'],
+    hints: ['המשתנה v מוכפל ב-m.', 'חלק את שני האגפים ב-m כדי לבודד את v.']
+  },
+  {
+    formula: 'V = I × R',
+    target: 'I',
+    difficulty: 'easy',
+    answer: 'I = V / R',
+    acceptable: ['I=V/R', 'V/R'],
+    steps: ['הנוסחה המקורית: V = I × R', 'אנו רוצים לבודד את I.', 'נחלק את שני אגפי המשוואה ב-R:', 'V / R = I', 'התשובה: I = V / R'],
+    hints: ['המשתנה I מוכפל ב-R.', 'חלק את שני האגפים ב-R כדי לבודד את I.']
+  },
+  {
+    formula: 'V = I × R',
+    target: 'R',
+    difficulty: 'easy',
+    answer: 'R = V / I',
+    acceptable: ['R=V/I', 'V/I'],
+    steps: ['הנוסחה המקורית: V = I × R', 'אנו רוצים לבודד את R.', 'נחלק את שני אגפי המשוואה ב-I:', 'V / I = R', 'התשובה: R = V / I'],
+    hints: ['המשתנה R מוכפל ב-I.', 'חלק את שני האגפים ב-I כדי לבודד את R.']
+  },
+  {
+    formula: 'P = W / t',
+    target: 'W',
+    difficulty: 'easy',
+    answer: 'W = P × t',
+    acceptable: ['W=P*t', 'W=Pt', 'P*t', 'Pt', 'P × t'],
+    steps: ['הנוסחה המקורית: P = W / t', 'אנו רוצים לבודד את W.', 'נכפול את שני אגפי המשוואה ב-t:', 'P × t = W', 'התשובה: W = P × t'],
+    hints: ['המשתנה W מחולק ב-t.', 'כדי לבטל את החילוק, כפול את שני האגפים ב-t.']
+  },
+  {
+    formula: 'ρ = m / V',
+    target: 'm',
+    difficulty: 'easy',
+    answer: 'm = ρ × V',
+    acceptable: ['m=ρ*V', 'm=ρV', 'ρ*V', 'ρV', 'ρ × V', 'm=pV', 'm=p*V', 'pV', 'p*V'],
+    expectedMistakes: [
+      { wrongAnswer: 'm=ρ/V', explanation: 'נראה שחילקת ב-V במקום לכפול. m מחולק ב-V בנוסחה, לכן צריך לכפול כדי לבודד אותו.' },
+      { wrongAnswer: 'm=V/ρ', explanation: 'חילקת בצורה הפוכה. זכור שהמטרה היא לבודד את m על ידי כפל ב-V.' }
+    ],
+    steps: ['הנוסחה המקורית: ρ = m / V', 'אנו רוצים לבודד את m.', 'נכפול את שני אגפי המשוואה ב-V:', 'ρ × V = m', 'התשובה: m = ρ × V'],
+    hints: ['המשתנה m מחולק ב-V.', 'כדי לבטל את החילוק, כפול את שני האגפים ב-V.']
+  },
+  {
+    formula: 'f = 1 / T',
+    target: 'T',
+    difficulty: 'easy',
+    answer: 'T = 1 / f',
+    acceptable: ['T=1/f', '1/f'],
+    steps: ['הנוסחה המקורית: f = 1 / T', 'אנו רוצים לבודד את T.', 'נכפול את שני אגפי המשוואה ב-T: f × T = 1', 'נחלק את שני אגפי המשוואה ב-f:', 'T = 1 / f', 'התשובה: T = 1 / f'],
+    hints: ['המשתנה T נמצא במכנה.', 'כפול ב-T ואז חלק ב-f.']
+  },
+  {
+    formula: 'F = k × x',
+    target: 'x',
+    difficulty: 'easy',
+    answer: 'x = F / k',
+    acceptable: ['x=F/k', 'F/k'],
+    steps: ['הנוסחה המקורית (חוק הוק): F = k × x', 'אנו רוצים לבודד את התארכות הקפיץ x.', 'נחלק את שני אגפי המשוואה בקבוע הקפיץ k:', 'x = F / k', 'התשובה: x = F / k'],
+    hints: ['המשתנה x מוכפל ב-k.', 'חלק את שני האגפים ב-k כדי לבודד אותו.']
+  },
+  {
+    formula: 'v = f × λ',
+    target: 'λ',
+    difficulty: 'easy',
+    answer: 'λ = v / f',
+    acceptable: ['λ=v/f', 'v/f', 'l=v/f', 'l=v/f'],
+    steps: ['הנוסחה המקורית: v = f × λ', 'אנו רוצים לבודד את אורך הגל λ.', 'נחלק את שני האגפים בתדר f:', 'λ = v / f', 'התשובה: λ = v / f'],
+    hints: ['אורך הגל λ מוכפל בתדר f.', 'חלק את המהירות v בתדר f.']
+  },
+
+  // MEDIUM
+  {
+    formula: 'v = v₀ + a × t',
+    target: 't',
+    difficulty: 'medium',
+    answer: 't = (v - v₀) / a',
+    acceptable: ['t=(v-v0)/a', 't=(v-v\u2080)/a', '(v-v0)/a', '(v-v\u2080)/a'],
+    steps: ['הנוסחה המקורית: v = v₀ + a × t', 'אנו רוצים לבודד את t.', 'נחסר v₀ משני האגפים: v - v₀ = a × t', 'נחלק את שני האגפים ב-a:', 't = (v - v₀) / a', 'התשובה: t = (v - v₀) / a'],
+    hints: ['קודם כל העבר את v₀ לאגף השני על ידי חיסור.', 'לאחר מכן חלק במקדם של t (שהוא a).']
+  },
+  {
+    formula: 'v = v₀ + a × t',
+    target: 'a',
+    difficulty: 'medium',
+    answer: 'a = (v - v₀) / t',
+    acceptable: ['a=(v-v0)/t', 'a=(v-v\u2080)/t', '(v-v0)/t', '(v-v\u2080)/t'],
+    steps: ['הנוסחה המקורית: v = v₀ + a × t', 'אנו רוצים לבודד את a.', 'נחסר v₀ משני האגפים: v - v₀ = a × t', 'נחלק את שני האגפים ב-t:', 'a = (v - v₀) / t', 'התשובה: a = (v - v₀) / t'],
+    hints: ['העבר את האיבר v₀ לצד השני בחיסור.', 'חלק את שני האגפים ב-t כדי לבודד את a.']
+  },
+  {
+    formula: 'a = (v - v₀) / t',
+    target: 'v',
+    difficulty: 'medium',
+    answer: 'v = v₀ + a × t',
+    acceptable: ['v=v0+a*t', 'v=v0+at', 'v0+at', 'v0+a*t', 'v=v\u2080+a*t', 'v=v\u2080+at', 'v\u2080+at', 'v\u2080+a*t'],
+    steps: ['הנוסחה המקורית: a = (v - v₀) / t', 'אנו רוצים לבודד את v.', 'נכפול את שני האגפים ב-t כדי להיפטר מהמכנה: a × t = v - v₀', 'נוסיף v₀ לשני האגפים:', 'a × t + v₀ = v', 'התשובה: v = v₀ + a × t'],
+    hints: ['כדי להיפטר מהמכנה, כפול את שני האגפים ב-t.', 'לאחר מכן, העבר את v₀ לצד השני בסימן פלוס (חיבור).']
+  },
+  {
+    formula: 'P = F / A',
+    target: 'A',
+    difficulty: 'medium',
+    answer: 'A = F / P',
+    acceptable: ['A=F/P', 'F/P'],
+    steps: ['הנוסחה המקורית: P = F / A', 'אנו רוצים לבודד את A.', 'נכפול את שני האגפים ב-A: P × A = F', 'נחלק את שני האגפים ב-P:', 'A = F / P', 'התשובה: A = F / P'],
+    hints: ['המשתנה A נמצא במכנה.', 'כפול את שני האגפים ב-A, ואז חלק את שני האגפים ב-P.']
+  },
+  {
+    formula: 'Q = m × c × dT',
+    target: 'c',
+    difficulty: 'medium',
+    answer: 'c = Q / (m × dT)',
+    acceptable: ['c=Q/(m*dT)', 'c=Q/(mdT)', 'Q/(m*dT)', 'Q/(mdT)', 'c=Q/(m*dt)', 'Q/(m*dt)'],
+    steps: ['הנוסחה המקורית: Q = m × c × dT', 'אנו רוצים לבודד את c.', 'c מוכפל ב-m וב-dT.', 'נחלק את שני האגפים ב-(m × dT):', 'c = Q / (m × dT)', 'התשובה: c = Q / (m × dT)'],
+    hints: ['c מוכפל בשני משתנים אחרים: m ו-dT.', 'כדי לבודד אותו, חלק את האגף השני במכפלה שלהם.']
+  },
+  {
+    formula: 'P = I² × R',
+    target: 'R',
+    difficulty: 'medium',
+    answer: 'R = P / I²',
+    acceptable: ['R=P/I^2', 'R=P/I\u00B2', 'P/I^2', 'P/I\u00B2'],
+    steps: ['הנוסחה המקורית: P = I² × R', 'אנו רוצים לבודד את R.', 'R מוכפל ב-I².', 'נחלק את שני אגפי המשוואה ב-I²:', 'R = P / I²', 'התשובה: R = P / I²'],
+    hints: ['R מוכפל ב-I².', 'חלק את שני האגפים ב-I² כדי לבודד את R.']
+  },
+  {
+    formula: 'P = V² / R',
+    target: 'R',
+    difficulty: 'medium',
+    answer: 'R = V² / P',
+    acceptable: ['R=V^2/P', 'R=V\u00B2/P', 'V^2/P', 'V\u00B2/P'],
+    steps: ['הנוסחה המקורית: P = V² / R', 'אנו רוצים לבודד את R.', 'נכפול ב-R: P × R = V²', 'נחלק ב-P: R = V² / P', 'התשובה: R = V² / P'],
+    hints: ['R נמצא במכנה.', 'כפול ב-R ואז חלק ב-P.']
+  },
+  {
+    formula: 'U = m × g × h',
+    target: 'h',
+    difficulty: 'medium',
+    answer: 'h = U / (m × g)',
+    acceptable: ['h=U/(m*g)', 'h=U/(mg)', 'U/(m*g)', 'U/(mg)'],
+    steps: ['הנוסחה המקורית (אנרגיית גובה): U = m × g × h', 'אנו רוצים לבודד את הגובה h.', 'המשתנה h מוכפל ב-m וב-g.', 'נחלק את שני האגפים במכפלה (m × g):', 'h = U / (m × g)', 'התשובה: h = U / (m × g)'],
+    hints: ['h מוכפל ב-mg.', 'חלק את U במכפלה של המסה m והגרביטציה g.']
+  },
+
+  // HARD
+  {
+    formula: 'E = ½mv²',
+    target: 'v',
+    difficulty: 'hard',
+    answer: 'v = √(2E / m)',
+    acceptable: ['v=sqrt(2E/m)', 'v=\u221A(2E/m)', 'sqrt(2E/m)', '\u221A(2E/m)', 'sqrt(2*E/m)'],
+    steps: ['הנוסחה המקורית: E = ½mv²', 'אנו רוצים לבודד את v.', 'נכפול את שני האגפים ב-2 כדי להיפטר מהשבר: 2E = mv²', 'נחלק ב-m כדי לבודד את הריבוע: v² = 2E / m', 'נוציא שורש ריבועי משני האגפים:', 'v = √(2E / m)', 'התשובה: v = √(2E / m)'],
+    hints: ['כדי לבטל את ה-½, כפול את שני האגפים ב-2.', 'חלק ב-m כדי לבודד את הריבוע של v.', 'בצע פעולת שורש ריבועי כדי לקבל את v.']
+  },
+  {
+    formula: 'E = ½mv²',
+    target: 'm',
+    difficulty: 'hard',
+    answer: 'm = 2E / v²',
+    acceptable: ['m=2E/v^2', 'm=2E/v\u00B2', '2E/v^2', '2E/v\u00B2'],
+    steps: ['הנוסחה המקורית: E = ½mv²', 'אנו רוצים לבודד את m.', 'נכפול את שני האגפים ב-2: 2E = mv²', 'נחלק את שני האגפים ב-v²:', 'm = 2E / v²', 'התשובה: m = 2E / v²'],
+    hints: ['כדי לבטל את ה-½, כפול ב-2.', 'חלק את האגף השני ב-v² כדי לבודד את m.']
+  },
+  {
+    formula: 'E = ½kx²',
+    target: 'x',
+    difficulty: 'hard',
+    answer: 'x = √(2E / k)',
+    acceptable: ['x=sqrt(2E/k)', 'x=\u221A(2E/k)', 'sqrt(2E/k)', '\u221A(2E/k)'],
+    steps: ['הנוסחה המקורית: E = ½kx²', 'אנו רוצים לבודד את x.', 'נכפול ב-2: 2E = kx²', 'נחלק ב-k: x² = 2E / k', 'נוציא שורש ריבועי משני האגפים:', 'x = √(2E / k)', 'התשובה: x = √(2E / k)'],
+    hints: ['כפול ב-2 כדי לבטל את החצי.', 'חלק ב-k כדי לבודד את הריבוע.', 'הוצא שורש ריבועי.']
+  },
+  {
+    formula: 'T = 2π√(L / g)',
+    target: 'L',
+    difficulty: 'hard',
+    answer: 'L = g(T / 2π)²',
+    acceptable: ['L=g*(T/(2*pi))^2', 'L=g*(T/2pi)^2', 'L=g*T^2/(4*pi^2)', 'L=gT\u00B2/(4\u03C0\u00B2)', 'L=g(T/2\u03C0)\u00B2', 'g*(T/(2*pi))^2', 'g(T/2\u03C0)\u00B2'],
+    steps: ['הנוסחה המקורית: T = 2π√(L / g)', 'אנו רוצים לבודד את L.', 'נחלק את שני האגפים ב-2π: T / 2π = √(L / g)', 'נעלה בריבוע את שני האגפים כדי לבטל את השורש: (T / 2π)² = L / g', 'נכפול את שני האגפים ב-g:', 'L = g(T / 2π)²', 'או L = gT² / (4π²)', 'התשובה: L = g(T / 2π)²'],
+    hints: ['ראשית חלק את שני האגפים ב-2π כדי לבודד את השורש.', 'העלה את שני אגפי המשוואה בריבוע כדי להיפטר מהשורש.', 'כפול ב-g כדי לבודד את L.']
+  },
+  {
+    formula: 'T = 2π√(L / g)',
+    target: 'g',
+    difficulty: 'hard',
+    answer: 'g = 4π²L / T²',
+    acceptable: ['g=4*pi^2*L/T^2', 'g=4\u03C0\u00B2L/T²', '4\u03C0\u00B2L/T²', '4*pi^2*L/T^2'],
+    steps: ['הנוסחה המקורית: T = 2π√(L / g)', 'אנו רוצים לבודד את g.', 'נחלק ב-2π: T / 2π = √(L / g)', 'נעלה בריבוע את שני האגפים: (T / 2π)² = L / g', 'נכפול ב-g: g × (T / 2π)² = L', 'נחלק בביטוי בריבוע: g = L / (T / 2π)² = 4π²L / T²', 'התשובה: g = 4π²L / T²'],
+    hints: ['חלק ב-2π והעלה בריבוע.', 'כעת g נמצא במכנה, החלף בין g לבין האגף השני בריבוע.']
+  },
+  {
+    formula: 'F = G × m₁ × m₂ / r²',
+    target: 'r',
+    difficulty: 'hard',
+    answer: 'r = √(G × m₁ × m₂ / F)',
+    acceptable: ['r=sqrt(G*m1*m2/F)', 'r=\u221AG*m\u2081*m\u2082/F', 'sqrt(G*m1*m2/F)', '\u221A(G*m\u2081*m\u2082/F)', 'r=sqrt(Gm1m2/F)', 'sqrt(Gm1m2/F)'],
+    steps: ['הנוסחה המקורית: F = G × m₁ × m₂ / r²', 'אנו רוצים לבודד את r.', 'נכפול את שני האגפים ב-r²: F × r² = G × m₁ × m₂', 'נחלק את שני האגפים ב-F: r² = G × m₁ × m₂ / F', 'נוציא שורש ריבועי משני האגפים:', 'r = √(G × m₁ × m₂ / F)', 'התשובה: r = √(G × m₁ × m₂ / F)'],
+    hints: ['כפול ב-r² כדי להעלות אותו מהמכנה.', 'חלק ב-F כדי לבודד את הריבוע.', 'הוצא שורש ריבועי.']
+  },
+  {
+    formula: 'v² = v₀² + 2ad',
+    target: 'a',
+    difficulty: 'hard',
+    answer: 'a = (v² - v₀²) / 2d',
+    acceptable: ['a=(v^2-v0^2)/(2d)', 'a=(v\u00B2-v\u2080\u00B2)/2d', '(v^2-v0^2)/(2d)', 'a=(v^2-v0^2)/2d', '(v\u00B2-v\u2080\u00B2)/(2d)'],
+    steps: ['הנוסחה המקורית: v² = v₀² + 2ad', 'אנו רוצים לבודד את a.', 'נחסר v₀² משני האגפים: v² - v₀² = 2ad', 'a מוכפל ב-2d. נחלק את שני האגפים ב-2d:', 'a = (v² - v₀²) / 2d', 'התשובה: a = (v² - v₀²) / 2d'],
+    hints: ['העבר את v₀² לאגף השני בחיסור.', 'חלק את האגף השני ב-2d כדי להשאיר את a לבדו.']
+  },
+  {
+    formula: 'F = k × q₁ × q₂ / r²',
+    target: 'q₁',
+    difficulty: 'hard',
+    answer: 'q₁ = F × r² / (k × q₂)',
+    acceptable: ['q1=F*r^2/(k*q2)', 'q₁=F*r²/k*q₂', 'F*r^2/(k*q2)', 'F*r²/(k*q₂)'],
+    steps: ['הנוסחה המקורית (חוק קולון): F = k × q₁ × q₂ / r²', 'אנו רוצים לבודד את המטען q₁.', 'נכפול ב-r² כדי להיפטר מהמכנה: F × r² = k × q₁ × q₂', 'נחלק במכפלת המשתנים (k × q₂) שמוכפלים ב-q₁:', 'q₁ = F × r² / (k × q₂)', 'התשובה: q₁ = F × r² / (k × q₂)'],
+    hints: ['כפול ב-r² כדי לבטל את החלוקה במכנה.', 'חלק ב-k וב-q₂ כדי להשאיר את q₁ מבודד.']
+  },
+  {
+    formula: 'a = v² / r',
+    target: 'v',
+    difficulty: 'hard',
+    answer: 'v = √(a × r)',
+    acceptable: ['v=sqrt(a*r)', 'v=\u221A(a*r)', 'sqrt(a*r)', '\u221A(a*r)'],
+    steps: ['הנוסחה המקורית (תאוצה צנטריפיטלית): a = v² / r', 'אנו רוצים לבודד את המהירות v.', 'נכפול ב-r כדי לבודד את הריבוע: v² = a × r', 'נוציא שורש ריבועי משני האגפים: v = √(a × r)', 'התשובה: v = √(a × r)'],
+    hints: ['כפול ב-r כדי להעביר אותו מהמכנה.', 'הוצא שורש ריבועי של המכפלה כדי למצוא את v.']
+  },
+  {
+    formula: 'E = m × c²',
+    target: 'c',
+    difficulty: 'hard',
+    answer: 'c = √(E / m)',
+    acceptable: ['c=sqrt(E/m)', 'c=\u221A(E/m)', 'sqrt(E/m)', '\u221A(E/m)'],
+    steps: ['הנוסחה המקורית (נוסחת איינשטיין): E = m × c²', 'אנו רוצים לבודד את מהירות האור c.', 'נחלק במסה m כדי לבודד את הריבוע: c² = E / m', 'נוציא שורש ריבועי משני האגפים: c = √(E / m)', 'התשובה: c = √(E / m)'],
+    hints: ['חלק את שני האגפים ב-m.', 'הוצא שורש ריבועי כדי לבודד את c.']
+  },
+  {
+    formula: 'W = F × d', target: 'F', difficulty: 'easy',
+    answer: 'F = W / d', acceptable: ['F=W/d', 'W/d'],
+    steps: ['נחלק ב-d: F = W / d'], hints: ['חלק ב-d.']
+  },
+  {
+    formula: 'W = F × d', target: 'd', difficulty: 'easy',
+    answer: 'd = W / F', acceptable: ['d=W/F', 'W/F'],
+    steps: ['נחלק ב-F: d = W / F'], hints: ['חלק ב-F.']
+  },
+  {
+    formula: 'Q = C × V', target: 'C', difficulty: 'easy',
+    answer: 'C = Q / V', acceptable: ['C=Q/V', 'Q/V'],
+    steps: ['נחלק ב-V: C = Q / V'], hints: ['חלק ב-V.']
+  },
+  {
+    formula: 'Q = C × V', target: 'V', difficulty: 'easy',
+    answer: 'V = Q / C', acceptable: ['V=Q/C', 'Q/C'],
+    steps: ['נחלק ב-C: V = Q / C'], hints: ['חלק ב-C.']
+  },
+  {
+    formula: 'I = q / t', target: 'q', difficulty: 'easy',
+    answer: 'q = I × t', acceptable: ['q=I*t', 'q=It', 'I*t', 'It'],
+    steps: ['נכפול ב-t: q = I × t'], hints: ['כפול ב-t.']
+  },
+  {
+    formula: 'x = x₀ + v × t', target: 't', difficulty: 'medium',
+    answer: 't = (x - x₀) / v', acceptable: ['t=(x-x0)/v', '(x-x0)/v', 't=(x-x₀)/v', '(x-x₀)/v'],
+    steps: ['נחסר x₀: x - x₀ = v × t', 'נחלק ב-v: t = (x - x₀) / v'], hints: ['חסר x₀ ואז חלק ב-v.']
+  },
+  {
+    formula: 'Δv = a × t', target: 'a', difficulty: 'medium',
+    answer: 'a = Δv / t', acceptable: ['a=Deltav/t', 'a=Δv/t', 'Deltav/t', 'Δv/t'],
+    steps: ['נחלק ב-t: a = Δv / t'], hints: ['חלק את האגף השני ב-t. (השתמש ב-delta עבור Δ)']
+  },
+  {
+    formula: 'Δv = a × t', target: 't', difficulty: 'medium',
+    answer: 't = Δv / a', acceptable: ['t=Deltav/a', 't=Δv/a', 'Deltav/a', 'Δv/a'],
+    steps: ['נחלק ב-a: t = Δv / a'], hints: ['חלק את האגף השני ב-a. (השתמש ב-delta עבור Δ)']
+  },
+  {
+    formula: 'P = I × V', target: 'V', difficulty: 'medium',
+    answer: 'V = P / I', acceptable: ['V=P/I', 'P/I'],
+    steps: ['נחלק ב-I: V = P / I'], hints: ['חלק ב-I.']
+  },
+  {
+    formula: 'F = B × I × L', target: 'B', difficulty: 'medium',
+    answer: 'B = F / (I × L)', acceptable: ['B=F/(I*L)', 'B=F/(IL)', 'F/(I*L)', 'F/(IL)'],
+    steps: ['נחלק במכפלה של I ו-L: B = F / (I × L)'], hints: ['חלק את F במכפלה של I ו-L.']
+  },
+  {
+    formula: 'F = B × I × L', target: 'I', difficulty: 'medium',
+    answer: 'I = F / (B × L)', acceptable: ['I=F/(B*L)', 'I=F/(BL)', 'F/(B*L)', 'F/(BL)'],
+    steps: ['נחלק במכפלה של B ו-L: I = F / (B × L)'], hints: ['חלק את F במכפלה של B ו-L.']
+  },
+  {
+    formula: 'E = V / d', target: 'd', difficulty: 'medium',
+    answer: 'd = V / E', acceptable: ['d=V/E', 'V/E'],
+    steps: ['נכפול ב-d: E × d = V', 'נחלק ב-E: d = V / E'], hints: ['כפול ב-d ואז חלק ב-E.']
+  },
+  {
+    formula: 'F = E × q', target: 'E', difficulty: 'medium',
+    answer: 'E = F / q', acceptable: ['E=F/q', 'F/q'],
+    steps: ['נחלק ב-q: E = F / q'], hints: ['חלק את האגף השני ב-q.']
+  },
+  {
+    formula: 'K = p² / (2 × m)', target: 'p', difficulty: 'hard',
+    answer: 'p = √(2 × m × K)', acceptable: ['p=sqrt(2*m*K)', 'p=√(2*m*K)', 'sqrt(2*m*K)', '√(2*m*K)'],
+    steps: ['נכפול ב-2m: p² = 2 × m × K', 'נוציא שורש ריבועי: p = √(2 × m × K)'], hints: ['כפול במכנה 2m והוצא שורש.']
+  },
+  {
+    formula: 'K = p² / (2 × m)', target: 'm', difficulty: 'hard',
+    answer: 'm = p² / (2 × K)', acceptable: ['m=p^2/(2*K)', 'm=p²/(2*K)', 'p^2/(2*K)', 'p²/(2*K)'],
+    steps: ['נכפול ב-2m: 2 × m × K = p²', 'נחלק ב-2K: m = p² / (2 × K)'], hints: ['כפול במכנה 2m ואז חלק ב-2K.']
+  },
+  {
+    formula: 'T = 2π√(m / k)', target: 'm', difficulty: 'hard',
+    answer: 'm = k(T / 2π)²', acceptable: ['m=k*(T/(2*pi))^2', 'm=k*(T/2pi)^2', 'k*(T/(2*pi))^2', 'k(T/2π)²'],
+    steps: ['נחלק ב-2π: T / 2π = √(m / k)', 'נעלה בריבוע: (T / 2π)² = m / k', 'נכפול ב-k: m = k(T / 2π)²'], hints: ['חלק ב-2π, העלה בריבוע, ואז כפול ב-k. (השתמש ב-pi)']
+  },
+  {
+    formula: 'T = 2π√(m / k)', target: 'k', difficulty: 'hard',
+    answer: 'k = 4π²m / T²', acceptable: ['k=4*pi^2*m/T^2', 'k=4π²m/T²', '4π²m/T²', '4*pi^2*m/T^2'],
+    steps: ['נחלק ב-2π: T / 2π = √(m / k)', 'נעלה בריבוע: (T / 2π)² = m / k', 'נכפול ב-k ונחלק בביטוי בריבוע: k = m / (T / 2π)² = 4π²m / T²'], hints: ['חלק ב-2π, העלה בריבוע. k נמצא במכנה אז הוא מתחלף עם האגף השני.']
+  },
+  {
+    formula: 'R = ρ × L / A', target: 'A', difficulty: 'hard',
+    answer: 'A = ρ × L / R', acceptable: ['A=rho*L/R', 'A=ρ*L/R', 'rho*L/R', 'ρ*L/R'],
+    steps: ['נכפול ב-A: R × A = ρ × L', 'נחלק ב-R: A = ρ × L / R'], hints: ['כפול ב-A ואז חלק ב-R. (השתמש ב-rho עבור ρ)']
+  },
+  {
+    formula: 'R = ρ × L / A', target: 'L', difficulty: 'hard',
+    answer: 'L = R × A / ρ', acceptable: ['L=R*A/rho', 'L=R*A/ρ', 'R*A/rho', 'R*A/ρ'],
+    steps: ['נכפול ב-A: R × A = ρ × L', 'נחלק ב-ρ: L = R × A / ρ'], hints: ['כפול ב-A ואז חלק ב-ρ. (השתמש ב-rho עבור ρ)']
+  },
+  {
+    formula: 'v = √(G × M / R)', target: 'M', difficulty: 'hard',
+    answer: 'M = v² × R / G', acceptable: ['M=v^2*R/G', 'M=v²*R/G', 'v^2*R/G', 'v²*R/G'],
+    steps: ['נעלה בריבוע משני האגפים: v² = G × M / R', 'נכפול ב-R: v² × R = G × M', 'נחלק ב-G: M = v² × R / G'], hints: ['העלה בריבוע כדי לבטל את השורש, כפול ב-R וחלק ב-G.']
+  },
+  {
+    formula: 'v = √(G × M / R)', target: 'R', difficulty: 'hard',
+    answer: 'R = G × M / v²', acceptable: ['R=G*M/v^2', 'R=G*M/v²', 'G*M/v^2', 'G*M/v²'],
+    steps: ['נעלה בריבוע: v² = G × M / R', 'נכפול ב-R: v² × R = G × M', 'נחלק ב-v²: R = G × M / v²'], hints: ['העלה בריבוע. R במכנה אז החלף אותו עם v².']
+  }
+];
+
+function generateArithmetic(difficulty) {
+  const vars = ['x', 'y', 'a', 'b', 't', 'v'];
+  const v = randChoice(vars);
+
+  if (difficulty === 'easy') {
+    const c1 = randIntNonZero(-12, 12);
+    let c2 = randIntNonZero(-12, 12);
+    let c3 = randIntNonZero(-8, 8);
+    
+    const ans = c1 - c2 + c3;
+    const sign2 = c2 > 0 ? '-' : '+';
+    const sign3 = c3 > 0 ? '+' : '-';
+    const q = `${c1}${v} ${sign2} ${Math.abs(c2)}${v} ${sign3} ${Math.abs(c3)}${v}`;
+    return {
+      question: q,
+      instruction: `פשט את הביטוי הבא:`,
+      answer: `${ans}${v}`,
+      answerType: 'expression',
+      steps: [
+        `הביטוי הוא: ${q}`,
+        `כל האיברים בעלי משתנה זהה (${v}), לכן נבצע פעולות חשבון על המקדמים שלהם:`,
+        `${c1} - (${c2}) + (${c3}) = ${ans}`,
+        `המקדם הסופי הוא ${ans}`,
+        `התשובה הסופית היא: ${ans}${v}`
+      ],
+      hints: [
+        `שים לב שכל האיברים הם מסוג ${v}, מותר לחבר ולחסר אותם ישירות.`,
+        `חשב את סכום המקדמים: ${c1} ${sign2} ${Math.abs(c2)} ${sign3} ${Math.abs(c3)}`
+      ]
+    };
+  } else if (difficulty === 'medium') {
+    const v1 = 'a';
+    const v2 = 'b';
+    const mult = randIntNonZero(2, 4);
+    const cInside1 = randIntNonZero(-3, 3);
+    const cInside2 = randIntNonZero(2, 5);
+    const cOutside1 = randIntNonZero(-5, 5);
+    const cOutside2 = randIntNonZero(-5, 5);
+
+    const ansA = cOutside1 + mult * cInside1;
+    const ansB = mult * cInside2 + cOutside2;
+
+    const term1 = formatCoeff(cOutside1, true, v1);
+    const inside = `${formatCoeff(cInside1, true, v1)} ${cInside2 > 0 ? '+' : '-'} ${Math.abs(cInside2)}${v2}`;
+    const term3 = formatCoeff(cOutside2, false, v2);
+
+    const q = `${term1} + ${mult}(${inside})${term3}`;
+    
+    let ansStr = '';
+    if (ansA !== 0) ansStr += formatCoeff(ansA, true, v1);
+    if (ansB !== 0) ansStr += formatCoeff(ansB, ansA === 0, v2);
+    if (ansStr === '') ansStr = '0';
+
+    return {
+      question: q,
+      instruction: `פשט את הביטוי הבא (פתח סוגריים וקבץ איברים):`,
+      answer: ansStr,
+      answerType: 'expression',
+      steps: [
+        `הביטוי הוא: ${q}`,
+        `ראשית נפתח את הסוגריים על ידי הכפלה ב-${mult}:`,
+        `${mult} × (${inside}) = ${mult * cInside1}${v1} ${cInside2*mult >= 0 ? '+' : '-'} ${Math.abs(mult * cInside2)}${v2}`,
+        `נשכתב את הביטוי המלא: ${cOutside1}${v1} ${mult * cInside1 >= 0 ? '+' : '-'} ${Math.abs(mult * cInside1)}${v1} ${mult * cInside2 >= 0 ? '+' : '-'} ${Math.abs(mult * cInside2)}${v2} ${cOutside2 >= 0 ? '+' : '-'} ${Math.abs(cOutside2)}${v2}`,
+        `נקבץ את האיברים של ${v1}: (${cOutside1} + ${mult * cInside1})${v1} = ${ansA}${v1}`,
+        `נקבץ את האיברים של ${v2}: (${mult * cInside2} + ${cOutside2})${v2} = ${ansB}${v2}`,
+        `התשובה הסופית: ${ansStr}`
+      ],
+      hints: [
+        `השתמש בחוק הפילוג כדי לפתוח סוגריים: כפול את ${mult} בכל אחד מהאיברים שבתוך הסוגריים.`,
+        `לאחר פתיחת הסוגריים, חבר בנפרד את כל האיברים עם ${v1} ואת כל האיברים עם ${v2}.`
+      ]
+    };
+  } else {
+    const v1 = 'a';
+    const v2 = 'b';
+    const m1 = randInt(2, 4);
+    const m2 = randInt(2, 3);
+    const c1 = randInt(1, 4);
+    const c2 = randInt(1, 4);
+    const c3 = randInt(1, 3);
+    const c4 = randInt(1, 3);
+
+    const ansA = -m1 * c1 - m2 * c3;
+    const ansB = m1 * c2 - m2 * c4;
+
+    const q = `-${m1}(${c1}${v1} - ${c2}${v2}) - ${m2}(${c3}${v1} + ${c4}${v2})`;
+    
+    let ansStr = '';
+    if (ansA !== 0) ansStr += formatCoeff(ansA, true, v1);
+    if (ansB !== 0) ansStr += formatCoeff(ansB, ansA === 0, v2);
+    if (ansStr === '') ansStr = '0';
+
+    return {
+      question: q,
+      instruction: `פשט את הביטוי הבא:`,
+      answer: ansStr,
+      answerType: 'expression',
+      steps: [
+        `הביטוי הוא: ${q}`,
+        `נפתח את הסוגריים הראשונים (שימו לב לסימן המינוס!): -${m1} × (${c1}${v1} - ${c2}${v2}) = ${-m1*c1}${v1} + ${m1*c2}${v2}`,
+        `נפתח את הסוגריים השניים: -${m2} × (${c3}${v1} + ${c4}${v2}) = ${-m2*c3}${v1} - ${m2*c4}${v2}`,
+        `נחבר את האיברים של ${v1}: ${-m1*c1}${v1} - ${m2*c3}${v1} = ${ansA}${v1}`,
+        `נחבר את האיברים של ${v2}: ${m1*c2}${v2} - ${m2*c4}${v2} = ${ansB}${v2}`,
+        `התשובה הסופית היא: ${ansStr}`
+      ],
+      hints: [
+        `היזהר מאוד עם סימני המינוס מחוץ לסוגריים! מינוס כפול מינוס נותן פלוס.`,
+        `פתח את שני זוגות הסוגריים ואז קבץ איברים דומים.`
+      ]
+    };
+  }
+}
+
+function generateLinearEquation(difficulty) {
+  if (difficulty === 'easy') {
+    const x = randIntNonZero(-12, 12);
+    const a = randChoice([-5, -4, -3, -2, 2, 3, 4, 5, 6, 8]);
+    const b = randIntNonZero(-25, 25);
+    const rhs = a * x + b;
+    const sign = b > 0 ? '+' : '-';
+    const q = `${a}x ${sign} ${Math.abs(b)} = ${rhs}`;
+    return {
+      question: q,
+      instruction: `פתור את המשוואה הבאה:`,
+      answer: `${x}`,
+      answerType: 'number',
+      steps: [
+        `המשוואה: ${q}`,
+        `נעביר את המספר החופשי לאגף ימין בסימן הפוך: ${a}x = ${rhs} ${b > 0 ? '-' : '+'} ${Math.abs(b)}`,
+        `${a}x = ${rhs - b}`,
+        `נחלק את שני האגפים במקדם של x (שהוא ${a}):`,
+        `x = ${rhs - b} ÷ ${a}`,
+        `x = ${x}`
+      ],
+      hints: [
+        `בודד את האיבר עם x על ידי העברת המספר החופשי (${b}) לאגף השני בסימן הפוך.`,
+        `חלק את התוצאה במקדם של x.`
+      ]
+    };
+  } else if (difficulty === 'medium') {
+    const x = randIntNonZero(-10, 10);
+    const a = randIntNonZero(-8, 8);
+    let c = randIntNonZero(-8, 8);
+    if (a === c) c += 2;
+    const b = randIntNonZero(-20, 20);
+    const d = a * x + b - c * x;
+    
+    const signB = b >= 0 ? '+' : '-';
+    const signD = d >= 0 ? '+' : '-';
+    const q = `${a}x ${signB} ${Math.abs(b)} = ${c}x ${signD} ${Math.abs(d)}`;
+    return {
+      question: q,
+      instruction: `פתור את המשוואה הבאה (כנס איברים והעבר אגפים):`,
+      answer: `${x}`,
+      answerType: 'number',
+      steps: [
+        `המשוואה: ${q}`,
+        `נעביר את כל האיברים המכילים x לאגף שמאל, ואת המספרים החופשיים לאגף ימין:`,
+        `${a}x - (${c}x) = ${d} - (${b})`,
+        `נחשב את ההפרשים בכל אגף:`,
+        `${a - c}x = ${d - b}`,
+        `נחלק את שני האגפים ב-${a - c}:`,
+        `x = ${d - b} ÷ ${a - c}`,
+        `x = ${x}`
+      ],
+      hints: [
+        `העבר את cx לאגף שמאל (בסימן מינוס) ואת b לאגף ימין (בסימן הפוך).`,
+        `לאחר שקיבלת משוואה פשוטה מהצורה Ax = B, חלק את B ב-A.`
+      ]
+    };
+  } else {
+    const x = randIntNonZero(-6, 6);
+    const a = randInt(2, 5);
+    const b = randIntNonZero(-4, 4);
+    const c = randInt(1, 8);
+    const d = randInt(1, 4);
+    const temp = a * x + a * b - c - d * x;
+    const e = temp / d;
+    if (!Number.isInteger(e)) {
+      const x2 = randIntNonZero(-5, 5);
+      const q2 = `3(x - 2) - 4 = 2(2x + 1)`;
+      return {
+        question: q2,
+        instruction: `פתור את המשוואה הבאה:`,
+        answer: `-12`,
+        answerType: 'number',
+        steps: [
+          `המשוואה: ${q2}`,
+          `נפתח סוגריים בשני האגפים:`,
+          `3x - 6 - 4 = 4x + 2`,
+          `נכנס איברים באגף שמאל: 3x - 10 = 4x + 2`,
+          `נעביר אגפים: -10 - 2 = 4x - 3x`,
+          `-12 = x`,
+          `x = -12`
+        ],
+        hints: [
+          `פתח סוגריים תחילה על ידי מכפלת המספרים שמחוץ לסוגריים בכל איבר בפנים.`,
+          `כנס איברים חופשיים בכל אגף בנפרד ואז העבר אגפים.`
+        ]
+      };
+    }
+    
+    const signB = b >= 0 ? '+' : '-';
+    const signE = e >= 0 ? '+' : '-';
+    const q = `${a}(x ${signB} ${Math.abs(b)}) - ${c} = ${d === 1 ? '' : d}(x ${signE} ${Math.abs(e)})`;
+    return {
+      question: q,
+      instruction: `פתור את המשוואה הבאה:`,
+      answer: `${x}`,
+      answerType: 'number',
+      steps: [
+        `המשוואה: ${q}`,
+        `נפתח את הסוגריים בשני האגפים:`,
+        `אגף שמאל: ${a}x ${a*b >= 0 ? '+' : '-'} ${Math.abs(a*b)} - ${c} = ${a}x ${(a*b-c) >= 0 ? '+' : '-'} ${Math.abs(a*b-c)}`,
+        `אגף ימין: ${d}x ${d*e >= 0 ? '+' : '-'} ${Math.abs(d*e)}`,
+        `המשוואה כעת: ${a}x ${(a*b-c) >= 0 ? '+' : '-'} ${Math.abs(a*b-c)} = ${d}x ${d*e >= 0 ? '+' : '-'} ${Math.abs(d*e)}`,
+        `נעביר אגפים: ${a}x - ${d}x = ${d*e} - (${a*b-c})`,
+        `${a-d}x = ${d*e - (a*b-c)}`,
+        `נחלק ב-${a-d}: x = ${x}`
+      ],
+      hints: [
+        `פתח את הסוגריים בכל אגף בנפרד.`,
+        `כנס את המספרים החופשיים באגף שמאל.`,
+        `העבר את איברי ה-x לצד אחד ואת המספרים לצד השני.`
+      ]
+    };
+  }
+}
+
+function generateIsolateVariable(difficulty) {
+  const pool = FORMULA_DB.filter(f => f.difficulty === difficulty);
+  const chosen = randChoice(pool);
+
+  return {
+    question: chosen.formula,
+    instruction: `בודד את המשתנה ${chosen.target} מהנוסחה הבאה:`,
+    answer: chosen.answer,
+    acceptable: chosen.acceptable,
+    answerType: 'expression',
+    steps: chosen.steps,
+    hints: chosen.hints
+  };
+}
+
+function generateFractions(difficulty) {
+  if (difficulty === 'easy') {
+    const op = randChoice(['+', '-', '*', '/']);
+    const b = randChoice([2, 3, 4, 5, 6]);
+    let d = randChoice([2, 3, 4, 5, 6]);
+    if (op === '-' && b === d) d = d + 1;
+    const a = randInt(1, b - 1);
+    const c = randInt(1, d - 1);
+
+    if (op === '+') {
+      const lcm = (b * d) / gcd(b, d);
+      const numResult = a * (lcm / b) + c * (lcm / d);
+      const s = simplifyFraction(numResult, lcm);
+      const ansStr = s.den === 1 ? `${s.num}` : `${s.num}/${s.den}`;
+      return {
+        question: `${a}/${b} + ${c}/${d}`,
+        instruction: 'חשב את השבר הבא (כתוב בצורת שבר פשוט ממוזער, למשל 3/4 או מספר שלם):',
+        answer: ansStr,
+        answerType: 'fraction',
+        steps: [
+          `הביטוי: ${a}/${b} + ${c}/${d}`,
+          `נמצא מכנה משותף מינימלי עבור המכנים ${b} ו-${d}, המכנה המשותף הוא ${lcm}`,
+          `נרחיב את השבר הראשון: ${a}/${b} = ${a * (lcm/b)}/${lcm}`,
+          `נרחיב את השבר השני: ${c}/${d} = ${c * (lcm/d)}/${lcm}`,
+          `נחבר את המונים: ${a * (lcm/b)} + ${c * (lcm/d)} = ${numResult}`,
+          `נקבל: ${numResult}/${lcm}`,
+          s.num !== numResult ? `נצמצם את השבר ונקבל: ${ansStr}` : ''
+        ].filter(x => x),
+        hints: [
+          `מצא מכנה משותף ל-${b} ול-${d}.`,
+          `הרחב את שני השברים, ואז חבר את המונים החדשים.`
+        ]
+      };
+    } else if (op === '-') {
+      const lcm = (b * d) / gcd(b, d);
+      const numResult = a * (lcm / b) - c * (lcm / d);
+      const s = simplifyFraction(numResult, lcm);
+      const ansStr = s.den === 1 ? `${s.num}` : `${s.num}/${s.den}`;
+      return {
+        question: `${a}/${b} - ${c}/${d}`,
+        instruction: 'חשב את השבר הבא:',
+        answer: ansStr,
+        answerType: 'fraction',
+        steps: [
+          `הביטוי: ${a}/${b} - ${c}/${d}`,
+          `המכנה המשותף ל-${b} ול-${d} הוא ${lcm}`,
+          `נרחיב את השברים: ${a * (lcm/b)}/${lcm} - ${c * (lcm/d)}/${lcm}`,
+          `נחסר את המונים: ${a * (lcm/b)} - ${c * (lcm/d)} = ${numResult}`,
+          `נקבל: ${numResult}/${lcm}` + (s.num !== numResult ? ` = ${ansStr} (אחרי צמצום)` : '')
+        ],
+        hints: [
+          `הרחב למכנה משותף ${lcm}.`,
+          `חסר את המונה הימני מהמונה השמאלי.`
+        ]
+      };
+    } else if (op === '*') {
+      const num = a * c;
+      const den = b * d;
+      const s = simplifyFraction(num, den);
+      const ansStr = s.den === 1 ? `${s.num}` : `${s.num}/${s.den}`;
+      return {
+        question: `(${a}/${b}) × (${c}/${d})`,
+        instruction: 'חשב את מכפלת השברים הבאה:',
+        answer: ansStr,
+        answerType: 'fraction',
+        steps: [
+          `הביטוי: (${a}/${b}) × (${c}/${d})`,
+          `בכפל שברים, כופלים מונה במונה ומכנה במכנה:`,
+          `מונה: ${a} × ${c} = ${num}`,
+          `מכנה: ${b} × ${d} = ${den}`,
+          `נקבל: ${num}/${den}` + (s.num !== num ? ` = ${ansStr} (אחרי צמצום)` : '')
+        ],
+        hints: [
+          `בכפל שברים פשוט כופלים למעלה ולמטה.`,
+          `מונה כפול מונה: ${a} × ${c}, מכנה כפול מכנה: ${b} × ${d}.`
+        ]
+      };
+    } else {
+      const num = a * d;
+      const den = b * c;
+      const s = simplifyFraction(num, den);
+      const ansStr = s.den === 1 ? `${s.num}` : `${s.num}/${s.den}`;
+      return {
+        question: `(${a}/${b}) ÷ (${c}/${d})`,
+        instruction: 'חשב את חילוק השברים הבא:',
+        answer: ansStr,
+        answerType: 'fraction',
+        steps: [
+          `הביטוי: (${a}/${b}) ÷ (${c}/${d})`,
+          `חילוק שברים הוא כמו כפל בהופכי של השבר השני:`,
+          `(${a}/${b}) × (${d}/${c})`,
+          `מונה: ${a} × ${d} = ${num}`,
+          `מכנה: ${b} × ${c} = ${den}`,
+          `נקבל: ${num}/${den}` + (s.num !== num ? ` = ${ansStr} (אחרי צמצום)` : '')
+        ],
+        hints: [
+          `כדי לחלק שבר בשבר, כפול את השבר הראשון בהופכי של השבר השני.`,
+          `הפוך את השבר השני מ-${c}/${d} ל-${d}/${c} ובצע כפל.`
+        ]
+      };
+    }
+  } else if (difficulty === 'medium') {
+    const x2 = randInt(2, 8);
+    const mult = randInt(2, 5);
+    const bConst = randInt(1, 10);
+    const cConst = mult + bConst;
+    const aConst = x2 * mult;
+    const q = `${aConst}/x + ${bConst} = ${cConst}`;
+    return {
+      question: q,
+      instruction: 'פתור את המשוואה הבאה עבור x:',
+      answer: `${x2}`,
+      answerType: 'number',
+      steps: [
+        `המשוואה: ${q}`,
+        `נעביר את המספר ${bConst} לאגף ימין בחיסור:`,
+        `${aConst}/x = ${cConst} - ${bConst}`,
+        `${aConst}/x = ${mult}`,
+        `נכפול ב-x כדי להוציאו מהמכנה: ${aConst} = ${mult}x`,
+        `נחלק ב-${mult}: x = ${aConst} / ${mult} = ${x2}`
+      ],
+      hints: [
+        `החסר ${bConst} משני האגפים.`,
+        `לאחר מכן פתור את המשוואה מהצורה A/x = B על ידי הכפלה ב-x או החלפה בין x ל-B.`
+      ]
+    };
+  } else {
+    const pairs = [
+      { r1: 12, r2: 6, ans: 4 },
+      { r1: 20, r2: 5, ans: 4 },
+      { r1: 15, r2: 10, ans: 6 },
+      { r1: 30, r2: 15, ans: 10 },
+      { r1: 24, r2: 8, ans: 6 },
+      { r1: 12, r2: 4, ans: 3 },
+      { r1: 40, r2: 10, ans: 8 },
+      { r1: 18, r2: 9, ans: 6 }
+    ];
+    const chosen = randChoice(pairs);
+    const q = `1/R = 1/${chosen.r1} + 1/${chosen.r2}`;
+    return {
+      question: q,
+      instruction: 'חשב את ערך ההתנגדות השקולה R באומים (מתוך חיבור נגדים במקביל):',
+      answer: `${chosen.ans}`,
+      answerType: 'number',
+      steps: [
+        `המשוואה: ${q}`,
+        `נבצע חיבור שברים באגף ימין. המכנה המשותף ל-${chosen.r1} ול-${chosen.r2} הוא ${chosen.r1}`,
+        `נרחיב את השבר השני: 1/${chosen.r2} = ${chosen.r1/chosen.r2}/${chosen.r1}`,
+        `נחבר: 1/R = 1/${chosen.r1} + ${chosen.r1/chosen.r2}/${chosen.r1} = ${1 + chosen.r1/chosen.r2}/${chosen.r1}`,
+        `קיבלנו: 1/R = ${1 + chosen.r1/chosen.r2}/${chosen.r1}`,
+        `נצמצם את השבר באגף ימין (אם ניתן): 1/R = 1/${chosen.ans}`,
+        `נבצע הופכי לשני האגפים: R = ${chosen.ans}`
+      ],
+      hints: [
+        `חבר את השברים באגף ימין על ידי מציאת מכנה משותף.`,
+        `לאחר קבלת שבר יחיד באגף ימין, בצע פעולת הופכי (מונה הופך למכנה) כדי למצוא את R.`
+      ]
+    };
+  }
+}
+
+function generatePowers(difficulty) {
+  if (difficulty === 'easy') {
+    const base = randChoice(['x', 'a', 'y']);
+    const m = randInt(2, 7);
+    const n = randIntNonZero(-5, 5);
+    const type = randChoice(['mul', 'div']);
+
+    if (type === 'mul') {
+      const ansVal = m + n;
+      const q = `${base}^${m} × ${base}^(${n})`;
+      const ans = `${base}^${ansVal}`;
+      return {
+        question: q,
+        instruction: 'פשט את הביטוי באמצעות חוקי החזקות (השאר בצורה של בסיס ומעריך):',
+        answer: ans,
+        answerType: 'expression',
+        steps: [
+          `הביטוי: ${q}`,
+          `לפי חוקי החזקות, בכפל בסיסים זהים מחברים את המעריכים: aⁿ × aᵐ = aⁿ⁺ᵐ`,
+          `נחבר: ${m} + (${n}) = ${ansVal}`,
+          `נקבל: ${base}^${ansVal}`
+        ],
+        hints: [
+          `חוק החזקות הרלוונטי: aⁿ × aᵐ = aⁿ⁺ᵐ`,
+          `חבר את שני המעריכים: ${m} ועוד ${n}`
+        ]
+      };
+    } else {
+      const ansVal = m - n;
+      const q = `${base}^${m} ÷ ${base}^(${n})`;
+      const ans = `${base}^${ansVal}`;
+      return {
+        question: q,
+        instruction: 'פשט את הביטוי הבא:',
+        answer: ans,
+        answerType: 'expression',
+        steps: [
+          `הביטוי: ${q}`,
+          `לפי חוקי החזקות, בחילוק בסיסים זהים מחסירים את המעריכים: aⁿ ÷ aᵐ = aⁿ⁻ᵐ`,
+          `נחסר: ${m} - (${n}) = ${ansVal}`,
+          `נקבל: ${base}^${ansVal}`
+        ],
+        hints: [
+          `חוק החזקות הרלוונטי: aⁿ ÷ aᵐ = aⁿ⁻ᵐ`,
+          `חסר את המעריך שבמכנה (${n}) מהמעריך שבמונה (${m}). שים לב לסימנים!`
+        ]
+      };
+    }
+  } else if (difficulty === 'medium') {
+    const base1 = 'x';
+    const base2 = 'y';
+    const m = randInt(2, 4);
+    const n = randInt(2, 3);
+    const p = 2;
+    const qVal = randInt(1, m * p - 1);
+    
+    const ansX = m * p - qVal;
+    const ansY = n * p;
+    const qStr = `(${base1}^${m} × ${base2}^${n})² ÷ ${base1}^${qVal}`;
+    const ansStr = `${base1}^${ansX} × ${base2}^${ansY}`;
+
+    return {
+      question: qStr,
+      instruction: 'פשט את הביטוי הבא:',
+      answer: ansStr,
+      answerType: 'expression',
+      steps: [
+        `הביטוי: ${qStr}`,
+        `ראשית נפתח את הסוגריים הריבועיים. נעלה כל איבר בחזקת 2 (מעריך כפול מעריך):`,
+        `(${base1}^${m})² = ${base1}^${m * 2} = ${base1}^${m * p}`,
+        `(${base2}^${n})² = ${base2}^${n * 2} = ${base2}^${n * p}`,
+        `הביטוי המפשט כעת: ${base1}^${m * p} × ${base2}^${n * p} ÷ ${base1}^${qVal}`,
+        `נצמצם את בסיסי ה-${base1} (נחסר מעריכים בחילוק): ${base1}^(${m * p} - ${qVal}) = ${base1}^${ansX}`,
+        `התשובה הסופית: ${ansStr}`
+      ],
+      hints: [
+        `השתמש בחוק החזקות: (aⁿ)ᵐ = aⁿᵐ כדי לפתוח את הסוגריים.`,
+        `חסר את המעריך של ${base1} שמחוץ לסוגריים מהמעריך של ${base1} שבתוך הסוגריים לאחר הפתיחה.`
+      ]
+    };
+  } else {
+    const coeff = randChoice([4, 9, 16, 25, 36, 64]);
+    const rootCoeff = Math.sqrt(coeff);
+    const expA = randChoice([2, 4, 6]);
+    const expB = randChoice([2, 4, 6]);
+    const q = `√(${coeff} × a^${expA} × b^${expB})`;
+    const ans = `${rootCoeff} × a^${expA / 2} × b^${expB / 2}`;
+    
+    return {
+      question: q,
+      instruction: 'פשט את השורש הבא (הנח שכל המשתנים חיוביים):',
+      answer: ans,
+      acceptable: [`${rootCoeff}*a^${expA/2}*b^${expB/2}`, `${rootCoeff}a^${expA/2}b^${expB/2}`, `${rootCoeff} × a^${expA/2} × b^${expB/2}`],
+      answerType: 'expression',
+      steps: [
+        `הביטוי: ${q}`,
+        `נשתמש בחוק השורשים האומר ששורש של מכפלה שווה למכפלת השורשים: √(x × y) = √x × √y`,
+        `נחשב את השורש לכל איבר בנפרד:`,
+        `√${coeff} = ${rootCoeff}`,
+        `√(a^${expA}) = a^(${expA} ÷ 2) = a^${expA / 2}`,
+        `√(b^${expB}) = b^(${expB} ÷ 2) = b^${expB / 2}`,
+        `נכפיל את התוצאות: ${rootCoeff} × a^${expA / 2} × b^${expB / 2}`
+      ],
+      hints: [
+        `הוצא שורש ריבועי למספר (${coeff}) בנפרד.`,
+        `כדי להוציא שורש למשתנה עם חזקה, חלק את המעריך שלו ב-2.`,
+        `שלב את התשובות במכפלה.`
+      ]
+    };
+  }
+}
+
+function generateScientificNotation(difficulty) {
+  const physicsConstants = [
+    { name: 'מהירות האור במטרים לשנייה', value: 300000000, sci: '3 × 10^8' },
+    { name: 'קבוע הגרביטציה העולמי', value: 0.0000000000667, sci: '6.67 × 10^-11' },
+    { name: 'מטען האלקטרון בקולון', value: 0.00000000000000000016, sci: '1.6 × 10^-19' },
+    { name: 'מרחק ממוצע מכדור הארץ לשמש במטרים', value: 150000000000, sci: '1.5 × 10^11' },
+    { name: 'לחץ אטמוספרי סטנדרטי בפסקל', value: 101300, sci: '1.013 × 10^5' },
+    { name: 'קבוע פלאנק (מקורב)', value: 0.0000066, sci: '6.6 × 10^-6' }
+  ];
+
+  if (difficulty === 'easy') {
+    const constant = randChoice(physicsConstants);
+    const mode = randChoice(['toSci', 'fromSci']);
+
+    if (mode === 'toSci') {
+      return {
+        question: `${constant.value.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 })}`,
+        instruction: `כתוב את הקבוע הפיזיקלי "${constant.name}" בסימון מדעי (השתמש ב- × 10^ למשל 3 × 10^8):`,
+        answer: constant.sci,
+        answerType: 'scientific',
+        steps: [
+          `הערך שניתן: ${constant.value}`,
+          `נרצה להעבירו לצורה של a × 10ⁿ כאשר 1 ≤ a < 10`,
+          `נזיז את הנקודה העשרונית כך שנקבל מספר בטווח הזה.`,
+          `לאחר ההזזה, נרשום את מספר ההזזות כחזקה של 10 (חיובית אם הזזנו שמאלה, שלילית אם ימינה).`,
+          `התשובה הסופית היא: ${constant.sci}`
+        ],
+        hints: [
+          `הזז את הנקודה העשרונית עד שתקבל מספר בין 1 ל-10.`,
+          `ספור את מספר הצעדים שהזזת את הנקודה: מספר זה יהיה המעריך של 10.`
+        ]
+      };
+    } else {
+      return {
+        question: constant.sci,
+        instruction: `כתוב את המספר ${constant.sci} (הנתון בסימון מדעי) כמספר רגיל (עשרוני או שלם):`,
+        answer: `${constant.value.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 })}`,
+        answerType: 'number',
+        steps: [
+          `הערך שניתן: ${constant.sci}`,
+          `החזקה היא 10 בחזקת המעריך שצוין.`,
+          `נזיז את הנקודה העשרונית של המנטיסה לפי גודל וסימן המעריך.`,
+          `התשובה היא: ${constant.value.toLocaleString('en-US', { useGrouping: false, maximumFractionDigits: 20 })}`
+        ],
+        hints: [
+          `אם המעריך חיובי, הזז את הנקודה העשרונית ימינה.`,
+          `אם המעריך שלילי, הזז את הנקודה העשרונית שמאלה כמספר הצעדים שרשום בחזקה.`
+        ]
+      };
+    }
+  } else if (difficulty === 'medium') {
+    const a = randInt(2, 4);
+    const b = randInt(2, 4);
+    const n = randInt(3, 8);
+    const m = randInt(-6, -2);
+    
+    const ansA = a * b;
+    const ansExp = n + m;
+    const q = `(${a} × 10^${n}) × (${b} × 10^${m})`;
+    const ans = `${ansA} × 10^${ansExp}`;
+
+    return {
+      question: q,
+      instruction: 'חשב את המכפלה הבאה והשאר בסימון מדעי תקני:',
+      answer: ans,
+      answerType: 'scientific',
+      steps: [
+        `הביטוי: ${q}`,
+        `נכפיל בנפרד את המנטיסות (המספרים): ${a} × ${b} = ${ansA}`,
+        `נחבר את המעריכים של החזקות של 10: ${n} + (${m}) = ${ansExp}`,
+        `נשלב את התשובות: ${ansA} × 10^${ansExp}`
+      ],
+      hints: [
+        `כפול את המספרים הראשונים: ${a} × ${b}.`,
+        `חבר את מעריכי החזקות של 10: ${n} + (${m}).`
+      ]
+    };
+  } else {
+    const a = randChoice([6, 8, 9]);
+    const b = 3;
+    const n = randInt(4, 9);
+    const m = randInt(-5, -2);
+
+    const ansA = a / b;
+    const ansExp = n - m;
+    const q = `(${a} × 10^${n}) ÷ (${b} × 10^${m})`;
+    const ans = `${ansA} × 10^${ansExp}`;
+
+    return {
+      question: q,
+      instruction: 'חשב את חילוק המספרים הבא והשאר בסימון מדעי:',
+      answer: ans,
+      answerType: 'scientific',
+      steps: [
+        `הביטוי: ${q}`,
+        `נחלק את המנטיסות בנפרד: ${a} ÷ ${b} = ${ansA}`,
+        `נחסר את המעריך שבמכנה מהמעריך שבמונה: ${n} - (${m}) = ${n} + ${Math.abs(m)} = ${ansExp}`,
+        `נשלב את התוצאה: ${ans}`
+      ],
+      hints: [
+        `חלק את המספרים החופשיים: ${a} לחלק ל-${b}.`,
+        `חסר את המעריך התחתון מהעליון: ${n} פחות (${m}) (זכור: פחות של מינוס הופך לפלוס).`
+      ]
+    };
+  }
+}
+
+function generateRatios(difficulty) {
+  if (difficulty === 'easy') {
+    const scenarios = [
+      {
+        txt: 'מכונית נוסעת במהירות קבועה. אם היא עוברת מרחק של 120 מטרים ב-6 שניות, כמה מטרים היא תעבור ב-15 שניות?',
+        ans: 300,
+        steps: [
+          'המרחק פרופורציונלי ישר לזמן כאשר המהירות קבועה (d = v × t).',
+          'נבנה יחס של פרופורציה: 120 / 6 = x / 15',
+          'נחשב את המהירות v: 120 ÷ 6 = 20 מטרים לשנייה',
+          'כעת נחשב את המרחק עבור 15 שניות: x = 20 × 15 = 300 מטרים'
+        ],
+        hints: ['חשב תחילה את המרחק שעוברת המכונית בשנייה אחת (מהירות).', 'הכפל את המהירות שקיבלת בזמן המבוקש (15 שניות).']
+      },
+      {
+        txt: 'לפי החוק השני של ניוטון, כוח F פרופורציונלי לתאוצה a. אם מופעל כוח של 18 ניוטון והתאוצה היא 3 מ/שנ², איזה כוח בניוטון דרוש כדי לקבל תאוצה של 8 מ/שנ²?',
+        ans: 48,
+        steps: [
+          'היחס בין הכוח לתאוצה קבוע ושווה למסה (F / a = m).',
+          'נחשב את המסה m: 18 ÷ 3 = 6 ק״ג',
+          'נשתמש במסה כדי למצוא את הכוח הדרוש לתאוצה של 8 מ/שנ²: F = m × a = 6 × 8 = 48 ניוטון'
+        ],
+        hints: ['מצא את המסה על ידי חלוקת הכוח (18) בתאוצה (3).', 'הכפל את המסה בתאוצה החדשה (8).']
+      }
+    ];
+
+    const chosen = randChoice(scenarios);
+    return {
+      question: chosen.txt,
+      instruction: 'פתור את בעיית היחס הבאה:',
+      answer: `${chosen.ans}`,
+      answerType: 'number',
+      steps: chosen.steps,
+      hints: chosen.hints
+    };
+  } else if (difficulty === 'medium') {
+    const r1 = randChoice([2, 3, 5]);
+    const r2 = randChoice([3, 4, 7].filter(n => n !== r1));
+    const k = randInt(5, 15);
+    const sum = (r1 + r2) * k;
+    const ans = Math.min(r1, r2) * k;
+
+    const q = `היחס בין שתי מסות הוא ${r1}:${r2}. המסה הכוללת של המערכת היא ${sum} ק״ג.`;
+    return {
+      question: q,
+      instruction: 'מהי המסה הקטנה ביותר מבין השתיים (בק״ג)?',
+      answer: `${ans}`,
+      answerType: 'number',
+      steps: [
+        `היחס הוא: ${r1}:${r2}`,
+        `נסמן את המסות ב-${r1}k וב-${r2}k, כאשר k הוא קבוע הפרופורציה.`,
+        `סכומם הוא: ${r1}k + ${r2}k = ${sum}`,
+        `${r1 + r2}k = ${sum}`,
+        `נמצא את k: k = ${sum} ÷ ${r1 + r2} = ${k}`,
+        `המסה הקטנה יותר היא: ${Math.min(r1, r2)} × k = ${Math.min(r1, r2)} × ${k} = ${ans} ק״ג`
+      ],
+      hints: [
+        `הגדר את המסות ככפולות של משתנה עזר k.`,
+        `חבר את היחסים לקבלת סכום החלקים הכולל, וחלק את המסה הכוללת בסכום החלקים.`
+      ]
+    };
+  } else {
+    const p1 = 1;
+    const p2 = 2;
+    const p3 = 3;
+    const k = randChoice([5, 10, 15, 20]);
+    const sum = (p1 + p2 + p3) * k;
+    const r1 = p1 * k;
+    const r2 = p2 * k;
+    const r3 = p3 * k;
+
+    const q = `שלושה נגדים מחוברים בטור והיחס בין ערכי ההתנגדויות שלהם הוא ${p1}:${p2}:${p3}. ההתנגדות השקולה (הכוללת) של המעגל היא ${sum} אום.`;
+    return {
+      question: q,
+      instruction: 'רשום את ערכי שלושת הנגדים מופרדים בפסיקים (למשל: 10,20,30 בסדר עולה):',
+      answer: `${r1},${r2},${r3}`,
+      acceptable: [`${r1}, ${r2}, ${r3}`],
+      answerType: 'expression',
+      steps: [
+        `היחס של הנגדים בטור: ${p1}:${p2}:${p3}`,
+        `נסמן אותם כ-${p1}k, ${p2}k, ${p3}k.`,
+        `ההתנגדות השקולה בטור היא סכום הנגדים: R_total = R1 + R2 + R3`,
+        `${p1}k + ${p2}k + ${p3}k = ${sum}`,
+        `${p1 + p2 + p3}k = ${sum}`,
+        `k = ${sum} ÷ ${p1 + p2 + p3} = ${k}`,
+        `ערכי הנגדים הם:`,
+        `R1 = ${p1} × ${k} = ${r1} אום`,
+        `R2 = ${p2} × ${k} = ${r2} אום`,
+        `R3 = ${p3} × ${k} = ${r3} אום`,
+        `התשובה בסדר עולה: ${r1}, ${r2}, ${r3}`
+      ],
+      hints: [
+        `בחיבור בטור ההתנגדות הכוללת היא סכום ההתנגדויות.`,
+        `סמן את הנגדים כ-1k, 2k, ו-3k. סכומם שווה ל-${sum}. מצא את k.`
+      ]
+    };
+  }
+}
+
+function generateSystems(difficulty) {
+  if (difficulty === 'easy') {
+    const x = randInt(6, 25);
+    const y = randInt(2, x - 1);
+    const s = x + y;
+    const d = x - y;
+    
+    const q = `שני כוחות פועלים על גוף. כאשר הם באותו כיוון, שקול הכוחות הוא ${s} ניוטון (סכומם). כאשר הם בכיוונים מנוגדים, השקול הוא ${d} ניוטון (הפרשם).`;
+    return {
+      question: q,
+      instruction: `מצא את ערכם של שני הכוחות (רשום את התשובה בפורמט F1 = ${x}, F2 = ${y} או פשוט ${x},${y} בסדר יורד):`,
+      answer: `F1 = ${x}, F2 = ${y}`,
+      acceptable: [`${x},${y}`, `${x}, ${y}`, `F1=${x},F2=${y}`],
+      answerType: 'pair',
+      steps: [
+        `נסמן את הכוחות כ-F1 ו-F2.`,
+        `משוואה 1: F1 + F2 = ${s}`,
+        `משוואה 2: F1 - F2 = ${d}`,
+        `נחבר את שתי המשוואות: 2 × F1 = ${s} + ${d} = ${s + d}`,
+        `F1 = ${s + d} ÷ 2 = ${x} ניוטון`,
+        `נציב חזרה במשוואה הראשונה: ${x} + F2 = ${s} -> F2 = ${y} ניוטון`
+      ],
+      hints: [
+        `כתוב שתי משוואות: אחת לחיבור הכוחות ואחת לחיסור ביניהם.`,
+        `חבר את שתי המשוואות כדי לבטל את הכוח השני ולמצוא את הראשון.`
+      ]
+    };
+  } else if (difficulty === 'medium') {
+    const x = randIntNonZero(-5, 5);
+    const y = randIntNonZero(-5, 5);
+    const a = randIntNonZero(1, 3);
+    const b = randIntNonZero(-3, 3);
+    const c1 = a * x + b * y;
+    const d = x - y;
+    const eq1 = `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}y = ${c1}`;
+    const eq2 = `x - y = ${d}`;
+
+    return {
+      question: `${eq1}\n${eq2}`,
+      instruction: 'פתור את מערכת המשוואות הבאה:',
+      answer: `x = ${x}, y = ${y}`,
+      answerType: 'pair',
+      steps: [
+        `המשוואות הן:`,
+        `1) ${eq1}`,
+        `2) ${eq2}`,
+        `ממשוואה 2 נבודד את x: x = y + (${d})`,
+        `נציב את x שבודדנו לתוך משוואה 1:`,
+        `${a}(y + (${d})) ${b >= 0 ? '+' : '-'} ${Math.abs(b)}y = ${c1}`,
+        `${a}y + ${a * d} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}y = ${c1}`,
+        `${a + b}y = ${c1 - a * d}`,
+        `y = ${y}`,
+        `נציב את y במשוואה שבודדנו עבור x: x = ${y} + (${d}) = ${x}`
+      ],
+      hints: [
+        `בודד את x מהמשוואה השנייה x = y + ${d}.`,
+        `הצב את הביטוי הזה במקום x במשוואה הראשונה ופתור עבור y.`
+      ]
+    };
+  } else {
+    const x = randIntNonZero(-4, 4);
+    const y = randIntNonZero(-4, 4);
+    const a = 2;
+    const b = 3;
+    const d = 3;
+    const e = -2;
+    const c = a * x + b * y;
+    const f = d * x + e * y;
+
+    const eq1 = `2x + 3y = ${c}`;
+    const eq2 = `3x - 2y = ${f}`;
+
+    return {
+      question: `${eq1}\n${eq2}`,
+      instruction: 'פתור את מערכת המשוואות הבאה:',
+      answer: `x = ${x}, y = ${y}`,
+      answerType: 'pair',
+      steps: [
+        `המשוואות הן:`,
+        `1) ${eq1}`,
+        `2) ${eq2}`,
+        `נכפיל את משוואה 1 ב-2 ואת משוואה 2 ב-3 כדי להשוות את מקדמי y בסימנים מנוגדים:`,
+        `4x + 6y = ${2 * c}`,
+        `9x - 6y = ${3 * f}`,
+        `נחבר את שתי המשוואות (כדי לבטל את y):`,
+        `13x = ${2 * c + 3 * f}`,
+        `x = ${x}`,
+        `נציב את x במשוואה 1 כדי למצוא את y:`,
+        `2(${x}) + 3y = ${c} -> 3y = ${c - 2 * x} -> y = ${y}`
+      ],
+      hints: [
+        `ננסה להיפטר מהמשתנה y על ידי הכפלת המשוואה הראשונה ב-2 והשנייה ב-3.`,
+        `חבר את המשוואות החדשות שקיבלת כדי לבודד ולמצוא את x.`
+      ]
+    };
+  }
+}
+
+function generateQuadratic(difficulty) {
+  if (difficulty === 'easy') {
+    const t = randInt(2, 8);
+    const h = 5 * t * t;
+    const q = `5t² = ${h}`;
+    return {
+      question: q,
+      instruction: 'חשב את הזמן t בשניות (t > 0) מתוך משוואת נפילה חופשית:',
+      answer: `${t}`,
+      answerType: 'number',
+      steps: [
+        `המשוואה: ${q}`,
+        `נחלק את שני האגפים ב-5 כדי לבודד את t²:`,
+        `t² = ${h} ÷ 5 = ${t * t}`,
+        `נוציא שורש ריבועי משני האגפים:`,
+        `t = √${t * t} = ${t} (הפתרון השלילי נפסל מכיוון שזמן חייב להיות חיובי)`
+      ],
+      hints: [
+        `חלק את שני צדי המשוואה ב-5.`,
+        `הוצא שורש ריבועי למספר שקיבלת כדי למצוא את t.`
+      ]
+    };
+  } else if (difficulty === 'medium') {
+    const v = randInt(3, 10);
+    const q = `t² - ${v}t = 0`;
+    return {
+      question: q,
+      instruction: 'מצא את פתרונות המשוואה עבור t (למשל: t = 0 או t = v):',
+      answer: `t = 0 או t = ${v}`,
+      acceptable: [`t=0 או t=${v}`, `0,${v}`, `0, ${v}`, `t=0 or t=${v}`],
+      answerType: 'expression',
+      steps: [
+        `המשוואה: ${q}`,
+        `נוציא גורם משותף t מחוץ לסוגריים:`,
+        `t(t - ${v}) = 0`,
+        `עבור מכפלה ששווה ל-0, לפחות אחד הגורמים חייב להיות 0:`,
+        `אפשרות ראשונה: t = 0`,
+        `אפשרות שנייה: t - ${v} = 0 -> t = ${v}`,
+        `התשובה: t = 0 או t = ${v}`
+      ],
+      hints: [
+        `הוצא את t כגורם משותף מחוץ לסוגריים.`,
+        `השווה את t ל-0, ואת הביטוי שבתוך הסוגריים ל-0 כדי לקבל את שני הפתרונות.`
+      ]
+    };
+  } else {
+    const r1 = randIntNonZero(-5, 4);
+    let r2 = randIntNonZero(-5, 4);
+    if (r1 === r2) r2 += 1;
+    
+    const a = 2;
+    const b = -2 * (r1 + r2);
+    const c = 2 * r1 * r2;
+
+    const signB = b >= 0 ? '+' : '-';
+    const signC = c >= 0 ? '+' : '-';
+    const q = `2x² ${signB} ${Math.abs(b)}x ${signC} ${Math.abs(c)} = 0`;
+    const [small, big] = [Math.min(r1, r2), Math.max(r1, r2)];
+
+    return {
+      question: q,
+      instruction: 'פתור את המשוואה הבאה:',
+      answer: `x = ${small} או x = ${big}`,
+      answerType: 'expression',
+      steps: [
+        `המשוואה: ${q}`,
+        `נזהה את המקדמים: a = 2, b = ${b}, c = ${c}`,
+        `נשתמש בנוסחת השורשים: x = (-b ± √(b² - 4ac)) / 2a`,
+        `נחשב את הדיסקרימיננטה: Δ = (${b})² - 4 × 2 × (${c}) = ${b*b} - ${8*c} = ${b*b - 8*c}`,
+        `שורש הדיסקרימיננטה: √Δ = √${b*b - 8*c} = ${Math.sqrt(b*b - 8*c)}`,
+        `נציב בנוסחה: x = (${-b} ± ${Math.sqrt(b*b - 8*c)}) / 4`,
+        `x₁ = (${-b} + ${Math.sqrt(b*b - 8*c)}) / 4 = ${(-b + Math.sqrt(b*b - 8*c))/4}`,
+        `x₂ = (${-b} - ${Math.sqrt(b*b - 8*c)}) / 4 = ${(-b - Math.sqrt(b*b - 8*c))/4}`,
+        `התשובה היא: x = ${small} או x = ${big}`
+      ],
+      hints: [
+        `השתמש בנוסחת השורשים של משוואה ריבועית: a = 2, b = ${b}, c = ${c}.`,
+        `חשב את השורש הריבועי של הביטוי b² - 4ac, ולאחר מכן הציב בנוסחה.`
+      ]
+    };
+  }
+}
+
+function generateInequalities(difficulty) {
+  if (difficulty === 'easy') {
+    const x = randIntNonZero(-8, 8);
+    const a = randInt(2, 6);
+    const b = randIntNonZero(-10, 10);
+    const rhs = a * x + b;
+    const op = randChoice(['>', '<', '≥', '≤']);
+    const signB = b >= 0 ? '+' : '-';
+    const q = `${a}x ${signB} ${Math.abs(b)} ${op} ${rhs}`;
+    
+    return {
+      question: q,
+      instruction: 'פתור את אי-השוויון הבא:',
+      answer: `x ${op} ${x}`,
+      answerType: 'inequality',
+      steps: [
+        `אי-השוויון: ${q}`,
+        `נעביר את המספר החופשי (${b}) לאגף ימין בסימן הפוך:`,
+        `${a}x ${op} ${rhs} - (${b})`,
+        `${a}x ${op} ${rhs - b}`,
+        `נחלק את שני האגפים ב-${a} (מכיוון ש-${a} חיובי, כיוון הסימן לא משתנה):`,
+        `x ${op} ${x}`
+      ],
+      hints: [
+        `העבר את המספר החופשי ${b} לצד השני בסימן הפוך.`,
+        `חלק את שני הצדדים במקדם של x.`
+      ]
+    };
+  } else if (difficulty === 'medium') {
+    const x = randIntNonZero(-6, 6);
+    const a = randInt(-5, -2);
+    const b = randIntNonZero(-10, 10);
+    const rhs = a * x + b;
+    const op = randChoice(['>', '<', '≥', '≤']);
+    const signB = b >= 0 ? '+' : '-';
+    const q = `${a}x ${signB} ${Math.abs(b)} ${op} ${rhs}`;
+    
+    const flippedOp = op === '>' ? '<' : op === '<' ? '>' : op === '≥' ? '≤' : '≥';
+    return {
+      question: q,
+      instruction: 'פתור את אי-השוויון הבא (שים לב למקדמים שליליים):',
+      answer: `x ${flippedOp} ${x}`,
+      answerType: 'inequality',
+      steps: [
+        `אי-השוויון: ${q}`,
+        `נעביר את ${b} לאגף ימין בסימן הפוך:`,
+        `${a}x ${op} ${rhs - b}`,
+        `נחלק את שני האגפים ב-${a}. שימו לב: מכיוון שמחלקים במספר שלילי, כיוון אי-השוויון מתהפך!`,
+        `x ${flippedOp} ${x}`
+      ],
+      hints: [
+        `העבר את ${b} לצד ימין בסימן הפוך.`,
+        `חלק במקדם השלילי של x, וזכור להפוך את כיוון סימן האי-שוויון (למשל מ-> ל-<).`
+      ]
+    };
+  } else {
+    const x1 = randInt(-5, 0);
+    const x2 = randInt(x1 + 3, 6);
+    const a = randInt(2, 4);
+    const b = randIntNonZero(-6, 6);
+    const low = a * x1 + b;
+    const high = a * x2 + b;
+    const signB = b >= 0 ? '+' : '-';
+    const q = `${low} < ${a}x ${signB} ${Math.abs(b)} ≤ ${high}`;
+
+    return {
+      question: q,
+      instruction: 'פתור את אי-השוויון המורכב הבא:',
+      answer: `${x1} < x ≤ ${x2}`,
+      answerType: 'inequality',
+      steps: [
+        `אי-השוויון: ${q}`,
+        `נחסר ${b} מכל שלושת אגפי אי-השוויון:`,
+        `${low} - (${b}) < ${a}x ≤ ${high} - (${b})`,
+        `${low - b} < ${a}x ≤ ${high - b}`,
+        `נחלק את כל האגפים ב-${a}:`,
+        `(${low - b}) ÷ ${a} < x ≤ (${high - b}) ÷ ${a}`,
+        `${x1} < x ≤ ${x2}`
+      ],
+      hints: [
+        `בצע את הפעולות במקביל על שלושת אגפי אי-השוויון.`,
+        `החסר את ${b} מכל האגפים, ולאחר מכן חלק את כל האגפים ב-${a}.`
+      ]
+    };
+  }
+}
+
+function generateTrigonometry(difficulty) {
+  const standardAngles = {
+    0: { sin: '0', cos: '1', tan: '0' },
+    30: { sin: '1/2', cos: '√3/2', tan: '1/1.73' },
+    45: { sin: '√2/2', cos: '√2/2', tan: '1' },
+    60: { sin: '√3/2', cos: '1/2', tan: '1.73' },
+    90: { sin: '1', cos: '0', tan: 'לא מוגדר' }
+  };
+
+  if (difficulty === 'easy') {
+    const angle = randChoice([30, 45, 60]);
+    const func = randChoice(['sin', 'cos', 'tan']);
+    const q = `${func}(${angle}°)`;
+    let ans = standardAngles[angle][func];
+    if (angle === 30 && func === 'tan') ans = '1/√3';
+    if (angle === 60 && func === 'tan') ans = '√3';
+    
+    return {
+      question: q,
+      instruction: 'חשב את הערך הטריגונומטרי הבא (רשום את התוצאה כשבר פשוט או שורש כמו 1/2 או √3):',
+      answer: ans,
+      answerType: 'expression',
+      steps: [
+        `שאלה: ${q}`,
+        `לפי טבלת הערכים המיוחדים שמומלץ לזכור בפיזיקה:`,
+        `sin(30°) = 1/2, cos(30°) = √3/2`,
+        `sin(45°) = √2/2, cos(45°) = √2/2, tan(45°) = 1`,
+        `sin(60°) = √3/2, cos(60°) = 1/2`,
+        `לכן התשובה היא: ${ans}`
+      ],
+      hints: [
+        `היעזר בטבלת הערכים לזוויות המיוחדות (30, 45, 60 מעלות).`,
+        `חשוב לזכור ערכים אלו לפירוק וקטורים בפיזיקה.`
+      ]
+    };
+  } else if (difficulty === 'medium') {
+    const hyp = randChoice([5, 10, 15, 20, 25, 30, 40, 50]);
+    const angle = randChoice([30, 37, 53, 60]);
+    const isSin = randChoice([true, false]);
+    
+    let opposite, adjacent, compName, funcName, ans, funcValStr;
+    if (angle === 30) {
+      opposite = hyp * 0.5;
+      adjacent = `${hyp/2}√3`;
+      if (isSin) {
+        compName = 'הניצב שמול הזווית';
+        funcName = 'sin';
+        ans = opposite;
+        funcValStr = '1/2';
+      } else {
+        compName = 'הניצב שליד הזווית';
+        funcName = 'cos';
+        ans = adjacent;
+        funcValStr = '√3/2';
+      }
+    } else if (angle === 60) {
+      opposite = `${hyp/2}√3`;
+      adjacent = hyp * 0.5;
+      if (isSin) {
+        compName = 'הניצב שמול הזווית';
+        funcName = 'sin';
+        ans = opposite;
+        funcValStr = '√3/2';
+      } else {
+        compName = 'הניצב שליד הזווית';
+        funcName = 'cos';
+        ans = adjacent;
+        funcValStr = '1/2';
+      }
+    } else if (angle === 37) {
+      opposite = hyp * 0.6;
+      adjacent = hyp * 0.8;
+      if (isSin) {
+        compName = 'הניצב שמול הזווית';
+        funcName = 'sin';
+        ans = opposite;
+        funcValStr = '0.6';
+      } else {
+        compName = 'הניצב שליד הזווית';
+        funcName = 'cos';
+        ans = adjacent;
+        funcValStr = '0.8';
+      }
+    } else { // 53
+      opposite = hyp * 0.8;
+      adjacent = hyp * 0.6;
+      if (isSin) {
+        compName = 'הניצב שמול הזווית';
+        funcName = 'sin';
+        ans = opposite;
+        funcValStr = '0.8';
+      } else {
+        compName = 'הניצב שליד הזווית';
+        funcName = 'cos';
+        ans = adjacent;
+        funcValStr = '0.6';
+      }
+    }
+
+    const q = `במשולש ישר-זווית, היתר הוא ${hyp} ס״מ ואחת הזוויות היא ${angle}°.`;
+    return {
+      question: q,
+      instruction: `חשב את אורך ${compName} (במקרה של שורש, השאר אותו בצורה מדויקת כמו 10√3, אחרת רשום כמספר שלם או עשרוני):`,
+      answer: `${ans}`,
+      acceptable: [ans.toString(), ans.toString().replace(/\s+/g, '')],
+      answerType: 'expression',
+      steps: [
+        `נתון: יתר = ${hyp}, זווית = ${angle}°`,
+        `נשתמש בהגדרת הפונקציה הטריגונומטרית המתאימה:`,
+        funcName === 'sin' ? `sin(${angle}°) = ניצב נגדי / יתר` : `cos(${angle}°) = ניצב סמוך / יתר`,
+        funcName === 'sin' 
+          ? `ניצב נגדי = ${hyp} × sin(${angle}°)` 
+          : `ניצב סמוך = ${hyp} × cos(${angle}°)`,
+        `נציב את הערך הידוע בפיזיקה עבור ${funcName}(${angle}°): הוא ${funcValStr}`,
+        funcName === 'sin' 
+          ? `ניצב נגדי = ${hyp} × ${funcValStr} = ${ans}` 
+          : `ניצב סמוך = ${hyp} × ${funcValStr} = ${ans}`
+      ],
+      hints: [
+        `אם מחפשים את הצלע שמול הזווית, השתמש בסינוס: sin(α) = מול / יתר.`,
+        `אם מחפשים את הצלע שליד הזווית, השתמש בקוסינוס: cos(α) = ליד / יתר.`,
+        `זכור שבפיזיקה מקורב: sin(37°) ≈ 0.6, cos(37°) ≈ 0.8, sin(53°) ≈ 0.8, cos(53°) ≈ 0.6.`
+      ]
+    };
+  } else {
+    const scenarios = [
+      {
+        txt: 'וקטור כוח בעל רכיב אופקי Fx = 5 ניוטון ורכיב אנכי Fy = 5 ניוטון.',
+        ans: 45,
+        steps: [
+          'נבנה משולש כוחות ישר-זווית שבו הניצבים הם Fx ו-Fy.',
+          'טנגנס הזווית θ הוא היחס בין הרכיב האנכי (מול) לרכיב האופקי (ליד):',
+          'tan(θ) = Fy / Fx = 5 / 5 = 1',
+          'נחפש איזו זווית θ נותנת tan(θ) = 1. הזווית היא 45 מעלות.'
+        ],
+        hints: ['השתמש בטנגנס: tan(θ) = Fy / Fx.', 'חשב את היחס ואז מצא את הזווית המתאימה.']
+      },
+      {
+        txt: 'וקטור כוח בעל רכיב אופקי Fx = 6 ניוטון ורכיב אנכי Fy = 6√3 ניוטון.',
+        ans: 60,
+        steps: [
+          'טנגנס הזווית θ הוא היחס בין הרכיב האנכי לאופקי:',
+          'tan(θ) = Fy / Fx = 6√3 / 6 = √3',
+          'הזווית שערך הטנגנס שלה הוא √3 היא 60 מעלות.'
+        ],
+        hints: ['השתמש בטנגנס: tan(θ) = Fy / Fx.', 'צמצם את ה-6 וקבל tan(θ) = √3. איזו זווית זו?']
+      },
+      {
+        txt: 'וקטור מהירות בעל רכיב אופקי vx = 4√3 מ/שנ ורכיב אנכי vy = 4 מ/שנ.',
+        ans: 30,
+        steps: [
+          'טנגנס זווית הכיוון θ ביחס לאופק הוא היחס בין הרכיב האנכי לאופקי:',
+          'tan(θ) = vy / vx = 4 / (4√3) = 1/1.73',
+          'הזווית שערך הטנגנס שלה הוא 1/1.73 (או 1/1.73) היא 30 מעלות.'
+        ],
+        hints: ['השתמש בטנגנס: tan(θ) = vy / vx.', 'צמצם את ה-4 וקבל tan(θ) = 1/1.73 (או 1/1.73). איזו זווית זו?']
+      },
+      {
+        txt: 'וקטור כוח בעל רכיב אופקי Fx = 4 ניוטון ורכיב אנכי Fy = 3 ניוטון.',
+        ans: 37,
+        steps: [
+          'טנגנס הזווית θ הוא היחס בין הרכיב האנכי (מול) לרכיב האופקי (ליד):',
+          'tan(θ) = Fy / Fx = 3 / 4 = 0.75',
+          'בפיזיקה מקובל לדעת כי הזווית הנותנת tan(θ) ≈ 0.75 היא 37 מעלות.'
+        ],
+        hints: ['השתמש בטנגנס: tan(θ) = Fy / Fx.', 'חשב את היחס 3/4 = 0.75. זכור שזווית זו מתאימה ל-37 מעלות.']
+      },
+      {
+        txt: 'וקטור כוח בעל רכיב אופקי Fx = 3 ניוטון ורכיב אנכי Fy = 4 ניוטון.',
+        ans: 53,
+        steps: [
+          'טנגנס הזווית θ הוא היחס בין הרכיב האנכי לרכיב האופקי:',
+          'tan(θ) = Fy / Fx = 4 / 3 ≈ 1.33',
+          'בפיזיקה מקובל לדעת כי הזווית הנותנת tan(θ) ≈ 1.33 היא 53 מעלות.'
+        ],
+        hints: ['השתמש בטנגנס: tan(θ) = Fy / Fx.', 'חשב את היחס 4/3 ≈ 1.33. זכור שזווית זו מתאימה ל-53 מעלות.']
+      },
+      {
+        txt: 'וקטור העתק בעל רכיב אופקי dx = 8 מטרים ורכיב אנכי dy = 6 מטרים.',
+        ans: 37,
+        steps: [
+          'טנגנס זווית הכיוון θ הוא היחס בין הרכיב האנכי לאופקי:',
+          'tan(θ) = dy / dx = 6 / 8 = 3/4 = 0.75',
+          'הזווית שערך הטנגנס שלה הוא 0.75 היא 37 מעלות.'
+        ],
+        hints: ['השתמש בטנגנס: tan(θ) = dy / dx.', 'צמצם את היחס לקבלת 3/4 = 0.75, ומצא את הזווית המתאימה (37 מעלות).']
+      },
+      {
+        txt: 'וקטור העתק בעל רכיב אופקי dx = 6 מטרים ורכיב אנכי dy = 8 מטרים.',
+        ans: 53,
+        steps: [
+          'טנגנס זווית הכיוון θ הוא היחס בין הרכיב האנכי לאופקי:',
+          'tan(θ) = dy / dx = 8 / 6 = 4/3 ≈ 1.33',
+          'הזווית שערך הטנגנס שלה הוא 1.33 היא 53 מעלות.'
+        ],
+        hints: ['השתמש בטנגנס: tan(θ) = dy / dx.', 'צמצם את היחס לקבלת 4/3 ≈ 1.33, ומצא את הזווית המתאימה (53 מעלות).']
+      }
+    ];
+
+    const chosen = randChoice(scenarios);
+    return {
+      question: chosen.txt,
+      instruction: 'מהי זווית הוקטור ביחס לאופק במעלות (לעגל למספר שלם)?',
+      answer: `${chosen.ans}`,
+      answerType: 'number',
+      steps: chosen.steps,
+      hints: chosen.hints
+    };
+  }
+}
+
+const GENERATORS = {
+  arithmetic: generateArithmetic,
+  linear: generateLinearEquation,
+  isolate: generateIsolateVariable,
+  fractions: generateFractions,
+  powers: generatePowers,
+  scientific: generateScientificNotation,
+  ratios: generateRatios,
+  systems: generateSystems,
+  quadratic: generateQuadratic,
+  inequalities: generateInequalities,
+  trigonometry: generateTrigonometry
+};
+
+// ═══════════════════════════════════════════════════
+// ANSWER CHECKER
+// ═══════════════════════════════════════════════════
+function checkIntermediateStep(userAnswer, problem) {
+  if (!window.math) return false;
+  try {
+    let preprocessed = userAnswer
+      .replace(/(\d+)\s*\(/g, '$1*(')
+      .replace(/([a-zA-Z])\s*\(/g, '$1*(')
+      .replace(/\)\s*\(/g, ')*(');
+      
+    // Handle equations
+    if (preprocessed.includes('=')) {
+      const parts = preprocessed.split('=');
+      if (parts.length !== 2) return false;
+      const uLHS = parts[0].replace(/ x /g, ' * ').replace(/(\d)([a-zA-Z])/g, '$1*$2').replace(/\u00f7/g, '/');
+      const uRHS = parts[1].replace(/ x /g, ' * ').replace(/(\d)([a-zA-Z])/g, '$1*$2').replace(/\u00f7/g, '/');
+      
+      const diffStr = `(${uLHS}) - (${uRHS})`;
+      
+      if (problem.answerType === 'number') {
+        // For linear equations: evaluate at the correct root
+        const root = parseFloat(problem.answer);
+        if (isNaN(root)) return false;
+        const val = math.evaluate(diffStr, { x: root });
+        if (Math.abs(val) < 1e-9) return true;
+        return false;
+      } else {
+        // For physics formulas: plug in random values for variables
+        // But we don't know the variables easily.
+        // Let's use math.simplify on the user diff and compare with the problem answer?
+        // It's safer to just let it fall through or do a basic evaluation.
+      }
+    }
+
+    const uClean = preprocessed.replace(/ x /g, ' * ').replace(/(\d)([a-zA-Z])/g, '$1*$2').replace(/\u00f7/g, '/');
+
+    let cClean = problem.answer.replace(/ x /g, ' * ').replace(/(\d)([a-zA-Z])/g, '$1*$2').replace(/\u00f7/g, '/');
+
+    function getVars(expr) {
+      let m = expr.match(/[a-zA-Z]+/g) || [];
+      return new Set(m.filter(x => x !== 'or')); 
+    }
+
+    if (uClean.includes('=')) {
+      const uParts = uClean.split('=');
+      if (uParts.length !== 2) return false;
+      
+      let scope = {};
+      if (cClean.includes('=')) {
+        let assignments = cClean.replace(/,\s*/g, ',').replace(/or/g, ',').split(',');
+        let rhsExpressions = [];
+        for (let a of assignments) {
+          if (a.includes('=')) {
+            let p = a.split('=');
+            rhsExpressions.push({varName: p[0].replace(/[^a-zA-Z]/g, '').trim(), expr: p[1]});
+          }
+        }
+        
+        let allVars = new Set();
+        rhsExpressions.forEach(({expr}) => getVars(expr).forEach(v => allVars.add(v)));
+        for (let v of allVars) {
+          scope[v] = Math.floor(Math.random() * 9) + 1; 
+        }
+        for (let {varName, expr} of rhsExpressions) {
+           try { scope[varName] = math.evaluate(expr, scope); } catch(e) {}
+        }
+      } else {
+        try {
+          let val = math.evaluate(cClean);
+          let allVars = getVars(uClean);
+          for (let v of allVars) scope[v] = val;
+        } catch(e) {}
+      }
+      
+      const left = math.evaluate(uParts[0], scope);
+      const right = math.evaluate(uParts[1], scope);
+      if (Math.abs(left - right) < 0.001) return true;
+      return false;
+    } 
+    
+    if (problem.answerType === 'expression' || problem.answerType === 'fraction') {
+      const diff = math.simplify(`(${uClean}) - (${cClean})`);
+      if (diff.toString() === '0') return true;
+    } else if (problem.answerType === 'number') {
+      const uVal = math.evaluate(uClean);
+      const cVal = parseFloat(cClean);
+      if (Math.abs(uVal - cVal) < 0.001) return true;
+    }
+  } catch(e) {
+    return false;
+  }
+  return false;
+}
+
+function normalizeAnswer(str) {
+  if (!str) return '';
+  let s = str.toString().toLowerCase().trim();
+  s = s.replace(/\s+/g, '');
+  s = s.replace(/\u00f7/g, '/');
+  s = s.replace(/x/g, '*');
+  s = s.replace(/X/g, '*');
+  s = s.replace(/,/g, '');
+  return s;
+}
+
+function checkAnswer(userAnswer, problem) {
+  const ua = normalizeAnswer(userAnswer);
+  const ca = normalizeAnswer(problem.answer);
+
+  if (ua === ca) return true;
+
+  // Check acceptable alternatives
+  if (problem.acceptable) {
+    for (const alt of problem.acceptable) {
+      if (ua === normalizeAnswer(alt)) return true;
+    }
+  }
+
+  // For number type, compare numerically
+  if (problem.answerType === 'number') {
+    const cleanUa = userAnswer.replace(/,/g, '').replace(/^[a-zA-Z]\s*=\s*/, '');
+    const uaNum = parseFloat(cleanUa);
+    const caNum = parseFloat(problem.answer);
+    if (!isNaN(uaNum) && !isNaN(caNum) && Math.abs(uaNum - caNum) < 0.01) return true;
+  }
+
+  // For pair answers like "x = 2, y = 3"
+  if (problem.answerType === 'pair') {
+    const extractNums = (s) => {
+      const matches = s.match(/-?\d+/g);
+      return matches ? matches.map(Number).sort((a,b) => a - b) : [];
+    };
+    const uNums = extractNums(ua);
+    const cNums = extractNums(ca);
+    if (uNums.length === cNums.length && uNums.every((v, i) => v === cNums[i])) return true;
+  }
+
+  // For expressions, try some normalization
+  if (problem.answerType === 'expression' || problem.answerType === 'fraction') {
+    // Remove spaces and compare
+    const ua2 = ua.replace(/\s/g, '');
+    const ca2 = ca.replace(/\s/g, '');
+    if (ua2 === ca2) return true;
+
+    // For quadratic: check if both roots are present regardless of order
+    if (ua.includes('או') || ua.includes('or')) {
+      const uRoots = ua.match(/-?\d+/g);
+      const cRoots = ca.match(/-?\d+/g);
+      if (uRoots && cRoots) {
+        const uSorted = uRoots.map(Number).sort((a,b) => a-b);
+        const cSorted = cRoots.map(Number).sort((a,b) => a-b);
+        if (uSorted.length === cSorted.length && uSorted.every((v,i) => v === cSorted[i])) return true;
+      }
+    }
+  }
+
+  
+  return false;
+}
+
+// ═══════════════════════════════════════════════════
+// PROGRESS TRACKER
+// ═══════════════════════════════════════════════════
+class ProgressTracker {
+  constructor() {
+    this.data = this.load();
+  }
+
+  load() {
+    try {
+      const raw = localStorage.getItem('mathPractice_progress');
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return this.createEmpty();
+  }
+
+  createEmpty() {
+    const data = {
+      studentName: '',
+      studentClass: '',
+      topics: {},
+      homework: [],
+      history: [],
+      totalTime: 0,
+      lastSession: null
+    };
+    TOPICS.forEach(t => {
+      data.topics[t.id] = {
+        attempted: 0,
+        correct: 0,
+        hintsUsed: 0,
+        solutionsViewed: 0,
+        timeSpent: 0,
+        adaptiveDifficulty: 'easy',
+        byDifficulty: {
+          easy: { attempted: 0, correct: 0 },
+          medium: { attempted: 0, correct: 0 },
+          hard: { attempted: 0, correct: 0 }
+        }
+      };
+    });
+    return data;
+  }
+
+  save() {
+    localStorage.setItem('mathPractice_progress', JSON.stringify(this.data));
+  }
+
+  record(topicId, difficulty, isCorrect, hintsUsed, solutionViewed, questionText, isHomework, tries = 1) {
+    const t = this.data.topics[topicId];
+    if (!t) return;
+    t.attempted++;
+    if (isCorrect) t.correct++;
+    t.hintsUsed += hintsUsed;
+    if (solutionViewed) t.solutionsViewed++;
+    t.byDifficulty[difficulty].attempted++;
+    if (isCorrect) t.byDifficulty[difficulty].correct++;
+    
+    if (!this.data.history) this.data.history = [];
+    this.data.history.push({
+      topicId,
+      difficulty,
+      question: questionText,
+      isCorrect,
+      isHomework,
+      tries,
+      timestamp: new Date().toISOString()
+    });
+    
+    this.data.lastSession = new Date().toISOString();
+    this.save();
+  }
+
+  recordHomework(hwConfig, results) {
+    this.data.homework.push({
+      title: hwConfig.title || 'שיעורי בית',
+      date: new Date().toISOString(),
+      config: hwConfig,
+      results: results
+    });
+    this.save();
+  }
+
+  getTopicStats(topicId) {
+    return this.data.topics[topicId] || { attempted: 0, correct: 0, hintsUsed: 0 };
+  }
+
+  getTotalStats() {
+    let total = 0, correct = 0, hints = 0;
+    Object.values(this.data.topics).forEach(t => {
+      total += t.attempted;
+      correct += t.correct;
+      hints += t.hintsUsed;
+    });
+    return { total, correct, hints, accuracy: total > 0 ? Math.round(correct / total * 100) : 0 };
+  }
+
+  reset() {
+    this.data = this.createEmpty();
+    this.data.studentName = '';
+    this.data.studentClass = '';
+    this.save();
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// HOMEWORK MANAGER
+// ═══════════════════════════════════════════════════
+class HomeworkManager {
+  encode(config) {
+    try {
+      return btoa(unescape(encodeURIComponent(JSON.stringify(config))));
+    } catch(e) {
+      return null;
+    }
+  }
+
+  decode(code) {
+    try {
+      return JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+    } catch(e) {
+      return null;
+    }
+  }
+
+  validate(config) {
+    if (!config) return false;
+    if (!config.topics || !Array.isArray(config.topics) || config.topics.length === 0) return false;
+    if (!config.problemsPerTopic || config.problemsPerTopic < 1) 
+  return false;
+  return false;
+    return true;
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// EXPORT MANAGER
+// ═══════════════════════════════════════════════════
+class ExportManager {
+  generateHomeworkReport(tracker, activeHomework, hwResults) {
+    const data = tracker.data;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('he-IL');
+    const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+    const hwTitle = activeHomework.title || 'שיעורי בית';
+
+    let txt = `=========================================\n`;
+    txt += `          דוח שיעורי בית\n`;
+    txt += `=========================================\n\n`;
+    txt += `שם המשימה: ${hwTitle}\n`;
+    txt += `שם תלמיד: ${data.studentName || 'לא צוין'}\n`;
+    txt += `כיתה: ${data.studentClass || 'לא צוין'}\n`;
+    txt += `תאריך הפקה: ${dateStr} ${timeStr}\n\n`;
+
+    const total = hwResults.total || 0;
+    const correct = hwResults.correct || 0;
+    const acc = total > 0 ? Math.round(correct / total * 100) : 0;
+    
+    txt += `-----------------------------------------\n`;
+    txt += ` סיכום\n`;
+    txt += `-----------------------------------------\n`;
+    txt += `תרגילים שנפתרו: ${total}\n`;
+    txt += `תשובות נכונות: ${correct}\n`;
+    txt += `אחוז הצלחה: ${acc}%\n\n`;
+
+    const hwHistory = (data.history || []).filter(h => h.isHomework).slice(-total);
+    
+    txt += `-----------------------------------------\n`;
+    txt += ` פירוט התרגילים\n`;
+    txt += `-----------------------------------------\n\n`;
+    if (hwHistory.length === 0) {
+      txt += `לא נמצאו תרגילים מתועדים בזיכרון.\n`;
+    } else {
+      const grouped = {};
+      hwHistory.forEach(h => {
+        if (!grouped[h.topicId]) grouped[h.topicId] = [];
+        grouped[h.topicId].push(h);
+      });
+      
+      for (const [topicId, problems] of Object.entries(grouped)) {
+        const topic = TOPICS.find(t => t.id === topicId);
+        txt += `>>> נושא: ${topic ? topic.name : topicId}\n`;
+        const sortedProbs = problems.sort((a,b) => {
+          const diffMap = { easy: 1, medium: 2, hard: 3 };
+          return (diffMap[a.difficulty] || 0) - (diffMap[b.difficulty] || 0);
+        });
+        sortedProbs.forEach((p, idx) => {
+          const mark = p.isCorrect ? '[V]' : '[X]';
+          const diffStr = DIFFICULTY_NAMES[p.difficulty] || p.difficulty;
+          const cleanQ = p.question.replace(/\n/g, ' ').replace(/\n/g, ' ');
+          txt += `${mark} [רמת ${diffStr}] ${cleanQ}\n`;
+        });
+        txt += `\n`;
+      }
+    }
+    
+    const struggled = hwHistory.filter(h => h.tries > 1);
+    if (struggled.length > 0) {
+      txt += `-----------------------------------------\n`;
+      txt += ` ⚠️ תרגילים שדרשו יותר מניסיון אחד בשיעורי בית אלו\n`;
+      txt += `-----------------------------------------\n`;
+      struggled.forEach(h => {
+        const topic = TOPICS.find(t => t.id === h.topicId);
+        const topicName = topic ? topic.name : h.topicId;
+        const cleanQ = h.question.replace(/\n/g, ' ');
+        txt += `* [${topicName}] (ניסיונות: ${h.tries}) ${cleanQ} -> ${h.isCorrect ? 'נפתר בסוף' : 'לא נפתר'}\n`;
+      });
+      txt += `\n`;
+    }
+
+    txt += `=========================================\n`;
+    txt += `הופק אוטומטית על ידי אפליקציית "מתמטיקה לפיזיקה"\n`;
+    txt += `=========================================\n`;
+    return txt;
+  }
+
+  generateMarkdown(tracker) {
+    const data = tracker.data;
+    const stats = tracker.getTotalStats();
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('he-IL');
+    const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+    let md = `# 📊 דוח תרגול מתמטיקה\n\n`;
+    md += `- **שם תלמיד:** ${data.studentName || 'לא צוין'}\n`;
+    md += `- **כיתה:** ${data.studentClass || 'לא צוין'}\n`;
+    md += `- **תאריך הפקה:** ${dateStr} ${timeStr}\n\n`;
+
+    md += `## סיכום כללי\n\n`;
+    md += `| מדד | ערך |\n`;
+    md += `|------|------|\n`;
+    md += `| תרגילים שנפתרו | ${stats.total} |\n`;
+    md += `| תשובות נכונות | ${stats.correct} |\n`;
+    md += `| אחוז הצלחה | ${stats.accuracy}% |\n`;
+    md += `| רמזים ששימשו | ${stats.hints} |\n\n`;
+
+    md += `## פירוט לפי נושא\n\n`;
+    md += `| נושא | נפתרו | נכונים | אחוז | רמזים |\n`;
+    md += `|------|--------|--------|------|-------|\n`;
+
+    TOPICS.forEach(topic => {
+      const t = data.topics[topic.id];
+      if (t && t.attempted > 0) {
+        const acc = Math.round(t.correct / t.attempted * 100);
+        md += `| ${topic.name} | ${t.attempted} | ${t.correct} | ${acc}% | ${t.hintsUsed} |\n`;
+      }
+    });
+
+    md += `\n## פירוט לפי רמת קושי\n\n`;
+    TOPICS.forEach(topic => {
+      const t = data.topics[topic.id];
+      if (t && t.attempted > 0) {
+        md += `### ${topic.icon} ${topic.name}\n\n`;
+        md += `| רמה | נפתרו | נכונים | אחוז |\n`;
+        md += `|------|--------|--------|------|\n`;
+        ['easy', 'medium', 'hard'].forEach(d => {
+          const dd = t.byDifficulty[d];
+          if (dd.attempted > 0) {
+            const acc = Math.round(dd.correct / dd.attempted * 100);
+            md += `| ${DIFFICULTY_NAMES[d]} | ${dd.attempted} | ${dd.correct} | ${acc}% |\n`;
+          }
+        });
+        md += `\n`;
+      }
+    });
+
+    // Homework results
+    if (data.homework && data.homework.length > 0) {
+      md += `## שיעורי בית\n\n`;
+      data.homework.forEach((hw, i) => {
+        md += `### ${hw.title || `שיעורי בית ${i + 1}`}\n`;
+        md += `- תאריך: ${new Date(hw.date).toLocaleDateString('he-IL')}\n`;
+        if (hw.results) {
+          const total = hw.results.total || 0;
+          const correct = hw.results.correct || 0;
+          const acc = total > 0 ? Math.round(correct / total * 100) : 0;
+          md += `- תרגילים: ${total}, נכונים: ${correct}, אחוז: ${acc}%\n`;
+        }
+        md += `\n`;
+      });
+    }
+
+    // Add full history 
+    if (data.history && data.history.length > 0) {
+      md += `## היסטוריית תרגילים מפורטת\n\n`;
+      const grouped = {};
+      data.history.forEach(h => {
+        if (!grouped[h.topicId]) grouped[h.topicId] = [];
+        grouped[h.topicId].push(h);
+      });
+      
+      for (const [topicId, problems] of Object.entries(grouped)) {
+        const topic = TOPICS.find(t => t.id === topicId);
+        md += `### ${topic ? topic.icon + ' ' + topic.name : topicId}\n`;
+        
+        // Order by difficulty (easy, medium, hard)
+        const sortedProbs = problems.sort((a,b) => {
+          const diffMap = { easy: 1, medium: 2, hard: 3 };
+          return (diffMap[a.difficulty] || 0) - (diffMap[b.difficulty] || 0);
+        });
+        
+        sortedProbs.forEach((p) => {
+          const mark = p.isCorrect ? '✅' : '❌';
+          const diffStr = DIFFICULTY_NAMES[p.difficulty] || p.difficulty;
+          const cleanQ = p.question.replace(/\n/g, ' ').replace(/\n/g, ' ');
+          const hwMark = p.isHomework ? ' *(שיעורי בית)*' : '';
+          md += `- ${mark} [רמה: ${diffStr}] \`${cleanQ}\`${hwMark}\n`;
+        });
+        md += `\n`;
+      }
+    }
+    
+    if (data.history && data.history.length > 0) {
+      const struggled = data.history.filter(h => h.tries > 1);
+      if (struggled.length > 0) {
+        md += `## ⚠️ תרגילים שדרשו יותר מניסיון אחד\n\n`;
+        md += `| נושא | שאלה | ניסיונות | נפתר בסוף? |\n`;
+        md += `|------|-------|----------|-------------|\n`;
+        struggled.forEach(h => {
+          const topic = TOPICS.find(t => t.id === h.topicId);
+          const topicName = topic ? topic.name : h.topicId;
+          const cleanQ = h.question.replace(/\n/g, ' ');
+          md += `| ${topicName} | \`${cleanQ}\` | ${h.tries} | ${h.isCorrect ? '✅ כן' : '❌ לא'} |\n`;
+        });
+        md += `\n`;
+      }
+    }
+
+    md += `---\n*הופק אוטומטית על ידי אפליקציית "מתמטיקה לפיזיקה"*\n`;
+
+    return md;
+  }
+
+  generateText(tracker) {
+    const data = tracker.data;
+    const stats = tracker.getTotalStats();
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('he-IL');
+    const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+    let txt = `=========================================\n`;
+    txt += `         דוח תרגול מתמטיקה לפיזיקה         \n`;
+    txt += `=========================================\n\n`;
+    txt += `שם תלמיד: ${data.studentName || 'לא צוין'}\n`;
+    txt += `כיתה: ${data.studentClass || 'לא צוין'}\n`;
+    txt += `תאריך הפקה: ${dateStr} ${timeStr}\n\n`;
+
+    txt += `-----------------------------------------\n`;
+    txt += ` סיכום כללי\n`;
+    txt += `-----------------------------------------\n`;
+    txt += `תרגילים שנפתרו: ${stats.total}\n`;
+    txt += `תשובות נכונות: ${stats.correct}\n`;
+    txt += `אחוז הצלחה: ${stats.accuracy}%\n`;
+    txt += `רמזים ששימשו: ${stats.hints}\n\n`;
+
+    txt += `-----------------------------------------\n`;
+    txt += ` פירוט לפי נושא\n`;
+    txt += `-----------------------------------------\n`;
+    TOPICS.forEach(topic => {
+      const t = data.topics[topic.id];
+      if (t && t.attempted > 0) {
+        const acc = Math.round(t.correct / t.attempted * 100);
+        txt += `* ${topic.name}: נפתרו ${t.attempted} | נכונים ${t.correct} | אחוז הצלחה ${acc}% | רמזים ${t.hintsUsed}\n`;
+      }
+    });
+    txt += `\n`;
+
+    txt += `-----------------------------------------\n`;
+    txt += ` פירוט לפי רמת קושי\n`;
+    txt += `-----------------------------------------\n`;
+    TOPICS.forEach(topic => {
+      const t = data.topics[topic.id];
+      if (t && t.attempted > 0) {
+        txt += `${topic.name}:\n`;
+        ['easy', 'medium', 'hard'].forEach(d => {
+          const dd = t.byDifficulty[d];
+          if (dd.attempted > 0) {
+            const acc = Math.round(dd.correct / dd.attempted * 100);
+            txt += `  - רמת ${DIFFICULTY_NAMES[d]}: נפתרו ${dd.attempted} | נכונים ${dd.correct} | אחוז הצלחה ${acc}%\n`;
+          }
+        });
+      }
+    });
+    txt += `\n`;
+
+    if (data.homework && data.homework.length > 0) {
+      txt += `-----------------------------------------\n`;
+      txt += ` שיעורי בית\n`;
+      txt += `-----------------------------------------\n`;
+      data.homework.forEach((hw, i) => {
+        const title = hw.title || `שיעורי בית ${i + 1}`;
+        const date = new Date(hw.date).toLocaleDateString('he-IL');
+        const total = hw.results ? hw.results.total || 0 : 0;
+        const correct = hw.results ? hw.results.correct || 0 : 0;
+        const acc = total > 0 ? Math.round(correct / total * 100) : 0;
+        txt += `* ${title} (${date}): נפתרו ${total} | נכונים ${correct} | אחוז הצלחה ${acc}%\n`;
+      });
+    }
+
+    if (data.history && data.history.length > 0) {
+      const struggled = data.history.filter(h => h.tries > 1);
+      if (struggled.length > 0) {
+        txt += `-----------------------------------------\n`;
+        txt += ` ⚠️ תרגילים שדרשו יותר מניסיון אחד\n`;
+        txt += `-----------------------------------------\n`;
+        struggled.forEach(h => {
+          const topic = TOPICS.find(t => t.id === h.topicId);
+          const topicName = topic ? topic.name : h.topicId;
+          const cleanQ = h.question.replace(/\n/g, ' ');
+          txt += `* [${topicName}] (ניסיונות: ${h.tries}) ${cleanQ} -> ${h.isCorrect ? 'נפתר בסוף' : 'לא נפתר'}\n`;
+        });
+        txt += `\n`;
+      }
+    }
+
+    txt += `=========================================\n`;
+    txt += `הופק על ידי אפליקציית "מתמטיקה לפיזיקה"\n`;
+    txt += `=========================================\n`;
+
+    return txt;
+  }
+
+  generateCSV(tracker) {
+    const data = tracker.data;
+    const stats = tracker.getTotalStats();
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('he-IL');
+    const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+    let csv = `שם תלמיד,${data.studentName || 'לא צוין'}\n`;
+    csv += `כיתה,${data.studentClass || 'לא צוין'}\n`;
+    csv += `תאריך הפקה,${dateStr} ${timeStr}\n\n`;
+
+    csv += `סיכום כללי\n`;
+    csv += `מדד,ערך\n`;
+    csv += `תרגילים שנפתרו,${stats.total}\n`;
+    csv += `תשובות נכונות,${stats.correct}\n`;
+    csv += `אחוז הצלחה,${stats.accuracy}%\n`;
+    csv += `רמזים ששימשו,${stats.hints}\n\n`;
+
+    csv += `פירוט לפי נושא\n`;
+    csv += `נושא,נפתרו,נכונים,אחוז הצלחה,רמזים\n`;
+    TOPICS.forEach(topic => {
+      const t = data.topics[topic.id];
+      if (t && t.attempted > 0) {
+        const acc = Math.round(t.correct / t.attempted * 100);
+        csv += `"${topic.name}",${t.attempted},${t.correct},${acc}%,${t.hintsUsed}\n`;
+      }
+    });
+    csv += `\n`;
+
+    csv += `פירוט לפי רמת קושי\n`;
+    csv += `נושא,רמת קושי,נפתרו,נכונים,אחוז הצלחה\n`;
+    TOPICS.forEach(topic => {
+      const t = data.topics[topic.id];
+      if (t && t.attempted > 0) {
+        ['easy', 'medium', 'hard'].forEach(d => {
+          const dd = t.byDifficulty[d];
+          if (dd.attempted > 0) {
+            const acc = Math.round(dd.correct / dd.attempted * 100);
+            csv += `"${topic.name}","${DIFFICULTY_NAMES[d]}",${dd.attempted},${dd.correct},${acc}%\n`;
+          }
+        });
+      }
+    });
+    csv += `\n`;
+
+    if (data.homework && data.homework.length > 0) {
+      csv += `שיעורי בית\n`;
+      csv += `כותרת,תאריך,נפתרו,נכונים,אחוז הצלחה\n`;
+      data.homework.forEach((hw, i) => {
+        const title = hw.title || `שיעורי בית ${i + 1}`;
+        const date = new Date(hw.date).toLocaleDateString('he-IL');
+        const total = hw.results ? hw.results.total || 0 : 0;
+        const correct = hw.results ? hw.results.correct || 0 : 0;
+        const acc = total > 0 ? Math.round(correct / total * 100) : 0;
+        csv += `"${title}",${date},${total},${correct},${acc}%\n`;
+      });
+    }
+
+    return csv;
+  }
+
+  download(content, studentName, format) {
+    const safeName = (studentName || 'student').replace(/[^a-zA-Zא-ת0-9]/g, '_');
+    const date = new Date().toISOString().split('T')[0];
+    
+    let filename, mimeType, fileBlob;
+    
+    if (format === 'md') {
+      filename = `דוח_${safeName}_${date}.md`;
+      mimeType = 'text/markdown;charset=utf-8';
+      fileBlob = new Blob([content], { type: mimeType });
+    } else if (format === 'txt') {
+      filename = `דוח_${safeName}_${date}.txt`;
+      mimeType = 'text/plain;charset=utf-8';
+      fileBlob = new Blob([content], { type: mimeType });
+    } else if (format === 'csv') {
+      filename = `דוח_${safeName}_${date}.csv`;
+      mimeType = 'text/csv;charset=utf-8';
+      // Add UTF-8 BOM (\ufeff) so Excel opens Hebrew properly
+      fileBlob = new Blob(['\ufeff' + content], { type: mimeType });
+    }
+
+    const url = URL.createObjectURL(fileBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// MAIN APP CONTROLLER
+// ═══════════════════════════════════════════════════
+class App {
+  constructor() {
+    this.tracker = new ProgressTracker();
+    this.hwManager = new HomeworkManager();
+    this.exportManager = new ExportManager();
+
+    this.currentScreen = 'welcome';
+    this.currentTopic = null;
+    this.currentDifficulty = 'adaptive';
+    this.currentProblem = null;
+    this.problemCount = 0;
+    this.sessionCorrect = 0;
+    this.sessionTotal = 0;
+    this.hintsShown = 0;
+    this.solutionShown = false;
+    this.answered = false;
+    this.currentTries = 0;
+
+    this.consecutiveCorrect = 0;
+    this.consecutiveIncorrect = 0;
+
+    this.activeHomework = null;
+    this.hwResults = { total: 0, correct: 0, topics: {} };
+    this.hwProblemIndex = 0;
+    this.hwTopicIndex = 0;
+    this.inputHistory = [];
+    this.historyIndex = 0;
+
+
+    this.teacherPassword = 'teacher123';
+
+    this.init();
+  }
+
+  init() {
+    // Check if student already registered
+    if (this.tracker.data.studentName) {
+      this.showUser();
+      
+this.navigate('home');
+
+    }
+  }
+
+  // ─── Navigation ───
+  navigate(screen) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen' + screen.charAt(0).toUpperCase() + screen.slice(1));
+    if (el) {
+      el.classList.add('active');
+      this.currentScreen = screen;
+    }
+
+    if (screen === 'home') this.renderTopicGrid();
+    if (screen === 'progress') this.renderProgress();
+  }
+
+  // ─── Student Setup ───
+  startApp() {
+    const name = document.getElementById('studentName').value.trim();
+    const cls = document.getElementById('studentClass').value;
+    if (!name) {
+      this.toast('אנא הכנס את שמך');
+      return;
+    }
+    if (!cls) {
+      this.toast('אנא בחר כיתה');
+      return;
+    }
+    this.tracker.data.studentName = name;
+    this.tracker.data.studentClass = cls;
+    this.tracker.save();
+    this.showUser();
+    this.navigate('home');
+  }
+
+  showUser() {
+    const name = this.tracker.data.studentName;
+    if (name) {
+      document.getElementById('navUser').style.display = 'flex';
+      document.getElementById('navUserName').textContent = name;
+      document.getElementById('navUserAvatar').textContent = name.charAt(0);
+    }
+  }
+
+  openUserModal() {
+    const name = this.tracker.data.studentName;
+    const cls = this.tracker.data.studentClass;
+    if (!name) return;
+
+    document.getElementById('modalAvatar').textContent = name.charAt(0);
+    document.getElementById('modalName').textContent = name;
+    document.getElementById('modalClass').textContent = `כיתה: ${cls}`;
+    document.getElementById('userModal').style.display = 'flex';
+  }
+
+  closeUserModal() {
+    document.getElementById('userModal').style.display = 'none';
+  }
+
+  openGuideModal() {
+    document.getElementById('guideModal').style.display = 'flex';
+  }
+
+  closeGuideModal() {
+    document.getElementById('guideModal').style.display = 'none';
+  }
+
+  resetSolvedProblems() {
+    if (confirm('⚠️ אזהרה: האם אתה בטוח שברצונך לאפס את כל תרגילי התרגול והסטטיסטיקות? פעולה זו תנקה את הישגיך אך תשמור על שם המשתמש שלך.')) {
+      TOPICS.forEach(t => {
+        this.tracker.data.topics[t.id] = {
+          attempted: 0,
+          correct: 0,
+          hintsUsed: 0,
+          solutionsViewed: 0,
+          timeSpent: 0,
+          adaptiveDifficulty: 'easy',
+          byDifficulty: {
+            easy: { attempted: 0, correct: 0 },
+            medium: { attempted: 0, correct: 0 },
+            hard: { attempted: 0, correct: 0 }
+          }
+        };
+      });
+      this.tracker.data.homework = [];
+      this.tracker.save();
+      this.closeUserModal();
+      this.toast('🔄 כל נתוני התרגילים אופסו בהצלחה!');
+      if (this.currentScreen === 'progress') this.renderProgress();
+      if (this.currentScreen === 'home') this.renderTopicGrid();
+    }
+  }
+
+  logoutUser() {
+    if (confirm('⚠️ האם אתה בטוח שברצונך להתנתק? כל נתוני המשתמש וההתקדמות יימחקו מהמכשיר.')) {
+      this.tracker.reset();
+      this.closeUserModal();
+      document.getElementById('navUser').style.display = 'none';
+      document.getElementById('studentName').value = '';
+      document.getElementById('studentClass').value = '';
+      this.navigate('welcome');
+      this.toast('👤 התנתקת בהצלחה');
+    }
+  }
+
+  // ─── Topic Grid ───
+  renderTopicGrid() {
+    const grid = document.getElementById('topicGrid');
+    grid.innerHTML = '';
+
+    const topicsToShow = this.activeHomework
+      ? TOPICS.filter(t => this.activeHomework.topics.includes(t.id))
+      : TOPICS;
+
+    topicsToShow.forEach(topic => {
+      const stats = this.tracker.getTopicStats(topic.id);
+      const acc = stats.attempted > 0 ? Math.round(stats.correct / stats.attempted * 100) : 0;
+      const progress = Math.min(acc, 100);
+
+      const card = document.createElement('div');
+      card.className = `card topic-card card-glow-${topic.color}`;
+      card.onclick = () => this.startPractice(topic.id);
+      card.innerHTML = `
+        <span class="topic-icon">${topic.icon}</span>
+        <div class="topic-name">${topic.name}</div>
+        <div class="topic-desc">${topic.desc}</div>
+        <div class="topic-progress">
+          <div class="topic-progress-fill" style="width:${progress}%"></div>
+        </div>
+        <div class="topic-stats">
+          <span>${stats.attempted} תרגילים</span>
+          <span>${acc}% הצלחה</span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // Update homework banner
+    const banner = document.getElementById('hwBanner');
+    if (this.activeHomework) {
+      banner.classList.add('visible');
+      document.getElementById('hwBannerTitle').textContent =
+        this.activeHomework.title || 'שיעורי בית פעילים';
+      document.getElementById('hwBannerProgress').textContent =
+        `${this.hwResults.total} / ${this.activeHomework.topics.length * this.activeHomework.problemsPerTopic} תרגילים`;
+    } else {
+      banner.classList.remove('visible');
+    }
+  }
+
+  // ─── Practice ───
+  startPractice(topicId) {
+    this.currentTopic = topicId;
+    this.sessionCorrect = 0;
+    this.sessionTotal = 0;
+    this.problemCount = 0;
+    this.consecutiveCorrect = 0;
+    this.consecutiveIncorrect = 0;
+
+    const topic = TOPICS.find(t => t.id === topicId);
+    document.getElementById('practiceTitle').textContent = `${topic.icon} ${topic.name}`;
+
+    // If homework, use homework difficulty
+    if (this.activeHomework) {
+      const diff = this.activeHomework.difficulty === 'mixed'
+        ? randChoice(['easy', 'medium', 'hard'])
+        : this.activeHomework.difficulty;
+      this.currentDifficulty = diff;
+      document.getElementById('diffSelector').style.display = 'none';
+      document.getElementById('hwExportBtn').style.display = 'block';
+    } else {
+      document.getElementById('hwExportBtn').style.display = 'none';
+      document.getElementById('diffSelector').style.display = 'flex';
+      this.currentDifficulty = 'adaptive';
+    }
+
+    this.updateDifficultyUI();
+    this.navigate('practice');
+    this.nextProblem();
+  }
+
+  setDifficulty(diff) {
+    this.currentDifficulty = diff;
+    this.consecutiveCorrect = 0;
+    this.consecutiveIncorrect = 0;
+    this.updateDifficultyUI();
+    this.nextProblem();
+  }
+
+  updateDifficultyUI() {
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+      btn.className = 'difficulty-btn';
+    });
+    const btns = document.querySelectorAll('.difficulty-btn');
+    const idx = ['adaptive', 'easy', 'medium', 'hard'].indexOf(this.currentDifficulty);
+    if (btns[idx]) btns[idx].classList.add(`selected-${this.currentDifficulty}`);
+
+    // Disable hard button if not supported
+    const hardBtn = btns[3];
+    if (hardBtn && this.currentTopic) {
+      const generator = GENERATORS[this.currentTopic];
+      if (generator) {
+        let hasHard = false;
+        try {
+            if (generator('hard')) hasHard = true;
+        } catch (e) {}
+        
+        if (!hasHard) {
+          hardBtn.disabled = true;
+          hardBtn.style.opacity = '0.5';
+          hardBtn.style.cursor = 'not-allowed';
+          hardBtn.title = 'אין שאלות ברמה מתקדמת בנושא זה';
+        } else {
+          hardBtn.disabled = false;
+          hardBtn.style.opacity = '1';
+          hardBtn.style.cursor = 'pointer';
+          hardBtn.title = '';
+        }
+      }
+    }
+
+    const badge = document.getElementById('currentDiffBadge');
+    if (this.currentDifficulty === 'adaptive') {
+      const topicState = this.tracker.data.topics[this.currentTopic];
+      if (!topicState.adaptiveDifficulty) {
+        topicState.adaptiveDifficulty = 'easy';
+        this.tracker.save();
+      }
+      const adaptDiff = topicState.adaptiveDifficulty;
+      badge.textContent = `אוטומטי (${DIFFICULTY_NAMES[adaptDiff]})`;
+      badge.className = `difficulty-badge difficulty-${adaptDiff}`;
+    } else {
+      badge.textContent = DIFFICULTY_NAMES[this.currentDifficulty];
+      badge.className = `difficulty-badge difficulty-${this.currentDifficulty}`;
+    }
+  }
+
+  showMistakes() {
+    const list = document.getElementById('mistakesList');
+    list.innerHTML = '';
+    if (!this.currentProblem || !this.currentProblem.expectedMistakes || this.currentProblem.expectedMistakes.length === 0) {
+      list.innerHTML = '<p>אין הערות מיוחדות לשאלה זו, פשוט שים לב לסדר פעולות חשבון וסימנים.</p>';
+    } else {
+      this.currentProblem.expectedMistakes.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'step';
+        if (m.wrongAnswer === 'generic_unmatchable') {
+          div.innerHTML = `<strong>טיפ כללי:</strong><br><span style="color:var(--text-secondary); font-size:0.95rem;">${m.explanation}</span>`;
+        } else {
+          div.innerHTML = `<strong>טעות אופיינית:</strong> <span dir="ltr">${m.wrongAnswer}</span><br><span style="color:var(--text-secondary); font-size:0.9rem;">${m.explanation}</span>`;
+        }
+        list.appendChild(div);
+      });
+    }
+    document.getElementById('mistakesModal').style.display = 'flex';
+  }
+
+  closeMistakesModal() {
+    document.getElementById('mistakesModal').style.display = 'none';
+  }
+
+  nextProblem() {
+    if (this.activeHomework) {
+      const required = this.activeHomework.topics.length * this.activeHomework.problemsPerTopic;
+      if (this.hwResults.total >= required) {
+        this.finishHomework();
+        return;
+      }
+    }
+
+    this.problemCount++;
+    this.hintsShown = 0;
+    this.solutionShown = false;
+    this.answered = false;
+    this.currentTries = 0;
+
+    // Generate problem
+    const generator = GENERATORS[this.currentTopic];
+    if (!generator) {
+      this.toast('שגיאה: נושא לא נמצא');
+      return;
+    }
+
+    let diff;
+    if (this.activeHomework) {
+      diff = this.activeHomework.difficulty === 'mixed'
+        ? randChoice(['easy', 'medium', 'hard'])
+        : this.activeHomework.difficulty;
+    } else if (this.currentDifficulty === 'adaptive') {
+      const topicState = this.tracker.data.topics[this.currentTopic];
+      if (!topicState.adaptiveDifficulty) {
+        topicState.adaptiveDifficulty = 'easy';
+        this.tracker.save();
+      }
+      diff = topicState.adaptiveDifficulty;
+    } else {
+      diff = this.currentDifficulty;
+    }
+
+    let problem;
+    let attempts = 0;
+    do {
+            try {
+        problem = generator(diff);
+      } catch (e) {
+        problem = null;
+      }
+      if (!problem) problem = generator('medium');
+      if (!problem) problem = generator('easy');
+      
+      problem.signature = problem.question + '::' + problem.answer;
+      attempts++;
+    } while (this.recentSignatures && this.recentSignatures.includes(problem.signature) && attempts < 10);
+    
+    if (!this.recentSignatures) this.recentSignatures = [];
+    this.currentProblem = problem;
+
+    // Update UI
+    document.getElementById('problemNumber').textContent = `תרגיל #${this.problemCount}`;
+    document.getElementById('problemInstruction').textContent = this.currentProblem.instruction || '';
+
+    // Handle multi-line questions (for systems of equations)
+    const questionEl = document.getElementById('problemQuestion');
+    const hasHebrew = /[\u0590-\u05FF]/.test(this.currentProblem.question);
+    if (this.currentProblem.question.includes('\n')) {
+      questionEl.innerHTML = this.currentProblem.question.split('\n').map(line => {
+        if (!/[\u0590-\u05FF]/.test(line)) return `<span dir="ltr" class="math-text">${line}</span>`;
+        return line;
+      }).join('<br>');
+    } else {
+      if (!hasHebrew) {
+        questionEl.innerHTML = `<span dir="ltr" class="math-text">${this.currentProblem.question}</span>`;
+      } else {
+        questionEl.textContent = this.currentProblem.question;
+      }
+    }
+
+    document.getElementById('answerInput').value = '';
+    const h = document.getElementById('stepHistory'); if (h) h.innerHTML = '';
+    const hwH = document.getElementById('hwStepHistory'); if (hwH) hwH.innerHTML = '';
+    const hwInput = document.getElementById('hwAnswerInput'); if (hwInput) hwInput.value = '';
+    document.getElementById('answerInput').focus();
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('feedback').style.display = 'none';
+    
+    // Ensure all problems have expectedMistakes array
+    if (!this.currentProblem.expectedMistakes) {
+      this.currentProblem.expectedMistakes = [];
+    }
+    // If no specific mathematical mistakes were generated for this difficulty/type, add a generic one
+    if (this.currentProblem.expectedMistakes.length === 0) {
+      let topicHelp = "קרא היטב את השאלה ובדוק את החישובים שלך שוב. שים לב לסימני פלוס ומינוס.";
+      if (this.currentTopic === 'fractions') topicHelp = "בשברים, אל תשכח למצוא מכנה משותף בחיבור וחיסור. בכפל שברים, אל תעשה מכנה משותף.";
+      if (this.currentTopic === 'powers') topicHelp = "בחזקות, זכור לחבר מעריכים בכפל ולחסר בחילוק, במקום להכפיל או לחלק אותם.";
+      if (this.currentTopic === 'linear') topicHelp = "במשוואות, כשאתה מעביר איבר אגף - אל תשכח להפוך לו את הסימן.";
+      if (this.currentTopic === 'isolate') topicHelp = "בבידוד משתנים, הפעל תמיד את הפעולה ההפוכה כדי להיפטר מהאיברים שמפריעים (חילוק במקום כפל, וכו').";
+      
+      this.currentProblem.expectedMistakes.push({
+        wrongAnswer: "generic_unmatchable",
+        explanation: topicHelp
+      });
+    }
+
+    if (this.currentProblem && this.currentProblem.expectedMistakes && this.currentProblem.expectedMistakes.length > 0) {
+      document.getElementById('mistakesBtn').style.display = 'inline-flex';
+    } else {
+      document.getElementById('mistakesBtn').style.display = 'none';
+    }
+    document.getElementById('stepsContainer').classList.remove('visible');
+    document.getElementById('stepsList').innerHTML = '';
+    document.getElementById('nextBtn').style.display = 'none';
+    document.getElementById('hintBtn').disabled = false;
+    document.getElementById('solutionBtn').disabled = false;
+
+    this.updateScore();
+  }
+
+  updateScore() {
+    const scoreEl = document.getElementById('scoreDisplay');
+    scoreEl.textContent = `${this.sessionCorrect}/${this.sessionTotal} נכונים`;
+  }
+
+
+  checkAnswer() {
+    if (this.answered) return;
+
+    const isHw = !!this.activeHomework;
+    const inputEls = document.querySelectorAll('#answerInput');
+    const actualInput = isHw && inputEls.length > 1 ? inputEls[1] : inputEls[0];
+    
+    const historyEls = document.querySelectorAll('#stepHistory');
+    const actualHistory = isHw && historyEls.length > 1 ? historyEls[1] : historyEls[0];
+    
+    
+    const userAnswer = actualInput.value.trim();
+      
+      if (typeof this.inputHistory === 'undefined') {
+        this.toast('inputHistory is undefined! this = ' + this.constructor.name);
+        this.inputHistory = [];
+        this.historyIndex = 0;
+      }
+if (userAnswer && this.inputHistory[this.inputHistory.length - 1] !== userAnswer) {
+      this.inputHistory.push(userAnswer);
+    }
+    this.historyIndex = this.inputHistory.length;
+    if (!userAnswer) {
+      this.toast('הכנס תשובה');
+      return;
+    }
+
+    const isCorrect = checkAnswer(userAnswer, this.currentProblem);
+    
+    let isIntermediate = false;
+    let customFeedback = null;
+    let isExpectedMistake = false;
+
+    if (!isCorrect) {
+      if (this.currentProblem.expectedMistakes) {
+        const userClean = normalizeAnswer(userAnswer);
+        const match = this.currentProblem.expectedMistakes.find(m => {
+           if (this.currentProblem.answerType === 'number') {
+             return parseFloat(userAnswer) === parseFloat(m.wrongAnswer);
+           }
+           return normalizeAnswer(m.wrongAnswer) === userClean;
+        });
+        if (match) {
+          customFeedback = match.explanation;
+          isExpectedMistake = true;
+        }
+      }
+      
+      if (!isExpectedMistake && checkIntermediateStep(userAnswer, this.currentProblem)) {
+         isIntermediate = true;
+      }
+    }
+
+    let stateClass = '';
+    let stateLabel = '';
+    
+    if (isCorrect) {
+      stateClass = 'success';
+      stateLabel = '✅ תשובה סופית נכונה';
+    } else if (isIntermediate) {
+      stateClass = 'intermediate';
+      stateLabel = '🔄 שלב ביניים נכון';
+      actualInput.value = '';} else if (isExpectedMistake) {
+      stateClass = 'warning';
+      stateLabel = '⚠️ שים לב';
+    } else {
+      stateClass = 'error';
+      stateLabel = '❌ טעות';
+    }
+    
+    if (actualHistory) {
+      const li = document.createElement('li');
+      li.className = `step-item ${stateClass}`;
+      let msg = customFeedback ? `<div style="margin-top:4px; font-size:0.9rem;">💡 ${customFeedback}</div>` : '';
+      li.innerHTML = `<div class="step-item-title">${stateLabel}</div><div class="step-item-math math-text" dir="ltr">${userAnswer}</div>${msg}`;
+      actualHistory.appendChild(li);
+      actualHistory.scrollTop = actualHistory.scrollHeight;
+    }
+
+    if (isIntermediate) {
+      this.toast('שלב ביניים נכון, המשך כך!');
+      actualInput.value = '';
+        return; 
+    }
+
+    this.currentTries++;
+
+    let currentAdapt = null;
+    if (this.currentDifficulty === 'adaptive' && !this.activeHomework) {
+      const topicState = this.tracker.data.topics[this.currentTopic];
+      if (!topicState.adaptiveDifficulty) {
+        topicState.adaptiveDifficulty = 'easy';
+        this.tracker.save();
+      }
+      currentAdapt = topicState.adaptiveDifficulty;
+    }
+
+    const feedback = document.getElementById('feedback');
+    const activeDiff = this.activeHomework
+      ? (this.activeHomework.difficulty === 'mixed' ? this.currentProblem.difficulty || 'easy' : this.activeHomework.difficulty)
+      : (this.currentDifficulty === 'adaptive' ? currentAdapt : this.currentDifficulty);
+
+    if (isCorrect) {
+      this.answered = true;
+      this.sessionTotal++;
+      this.sessionCorrect++;
+      if (!this.recentSignatures) this.recentSignatures = [];
+      this.recentSignatures.push(this.currentProblem.signature);
+      if (this.recentSignatures.length > 10) this.recentSignatures.shift();
+      feedback.className = 'feedback correct';
+      feedback.textContent = '🎉 תשובה נכונה! כל הכבוד!';
+      feedback.style.display = 'block';
+      if (!this.solutionShown && this.hintsShown === 0) {
+        this.showConfetti();
+      }
+
+      if (currentAdapt) {
+        if (!this.solutionShown && this.currentTries === 1) {
+          this.consecutiveCorrect++;
+          this.consecutiveIncorrect = 0;
+          if (currentAdapt === 'easy' && this.consecutiveCorrect >= 3) {
+            this.tracker.data.topics[this.currentTopic].adaptiveDifficulty = 'medium';
+            this.tracker.save();
+            this.consecutiveCorrect = 0;
+            this.toast('🎉 יופי! עלית לרמת קושי בינונית!');
+            this.updateDifficultyUI();
+          } else if (currentAdapt === 'medium' && this.consecutiveCorrect >= 3) {
+            this.tracker.data.topics[this.currentTopic].adaptiveDifficulty = 'hard';
+            this.tracker.save();
+            this.consecutiveCorrect = 0;
+            this.toast('🏆 כל הכבוד! עלית לרמת קושי מתקדמת!');
+            this.updateDifficultyUI();
+          }
+        } else {
+          this.consecutiveCorrect = 0;
+        }
+      }
+
+      this.tracker.record(this.currentTopic, activeDiff, isCorrect, this.hintsShown, this.solutionShown, this.currentProblem.question, !!this.activeHomework, this.currentTries);
+      if (this.activeHomework) {
+        this.hwResults.total++;
+        if (isCorrect) this.hwResults.correct++;
+      }
+      document.getElementById('nextBtn').style.display = 'inline-flex';
+      this.updateScore();
+      actualInput.value = '';
+    } else {
+      actualInput.classList.add('shake');
+      setTimeout(() => actualInput.classList.remove('shake'), 400);
+
+      if (this.currentTries < 3) {
+        feedback.className = 'feedback incorrect';
+        if (customFeedback) {
+          feedback.innerHTML = `❌ תשובה שגויה. <br><span style="font-size:0.95rem; color: #ffeb3b;">💡 ${customFeedback}</span><br>נסה שוב! (ניסיון ${this.currentTries} מתוך 3)`;
+        } else {
+          feedback.innerHTML = `❌ תשובה שגויה. נסה שוב! (ניסיון ${this.currentTries} מתוך 3)`;
+        }
+        feedback.style.display = 'block';
+        actualInput.value = '';
+      } else {
+        this.answered = true;
+        this.sessionTotal++;
+        feedback.className = 'feedback incorrect';
+        feedback.innerHTML = `❌ תשובה שגויה. התשובה הנכונה: <strong dir="ltr" class="math-text">${this.currentProblem.answer}</strong>`;
+        feedback.style.display = 'block';
+
+        if (currentAdapt) {
+          this.consecutiveIncorrect++;
+          this.consecutiveCorrect = 0;
+          if (currentAdapt === 'hard' && this.consecutiveIncorrect >= 2) {
+            this.tracker.data.topics[this.currentTopic].adaptiveDifficulty = 'medium';
+            this.tracker.save();
+            this.consecutiveIncorrect = 0;
+            this.toast('📉 ירדת לרמת קושי בינונית. לא נורא, נסה שוב!');
+            this.updateDifficultyUI();
+          } else if (currentAdapt === 'medium' && this.consecutiveIncorrect >= 2) {
+            this.tracker.data.topics[this.currentTopic].adaptiveDifficulty = 'easy';
+            this.tracker.save();
+            this.consecutiveIncorrect = 0;
+            this.toast('📉 ירדת לרמת קושי קלה. נתרגל את הבסיס!');
+            this.updateDifficultyUI();
+          }
+        }
+        
+        this.tracker.record(this.currentTopic, activeDiff, false, this.hintsShown, this.solutionShown, this.currentProblem.question, !!this.activeHomework, this.currentTries);
+        if (this.activeHomework) {
+          this.hwResults.total++;
+        }
+
+        this.showFullSolution();
+      }
+    }
+  }
+
+  showHint() {
+    if (!this.currentProblem || !this.currentProblem.hints) return;
+    if (this.hintsShown >= this.currentProblem.hints.length) {
+      this.toast('אין עוד רמזים זמינים');
+      return;
+    }
+
+    this.consecutiveCorrect = 0; // Reset streak if hints are used
+
+    const container = document.getElementById('stepsContainer');
+    const list = document.getElementById('stepsList');
+    container.classList.add('visible');
+    container.querySelector('h3').textContent = '💡 רמזים';
+
+    const hint = this.currentProblem.hints[this.hintsShown];
+    const div = document.createElement('div');
+    div.className = 'step-item';
+    div.innerHTML = `<span class="step-number">${this.hintsShown + 1}</span> ${hint}`;
+    list.appendChild(div);
+
+    this.hintsShown++;
+
+    if (this.hintsShown >= this.currentProblem.hints.length) {
+      document.getElementById('hintBtn').disabled = true;
+    }
+  }
+
+  showFullSolution() {
+
+    if (!this.currentProblem) return;
+
+    this.solutionShown = true;
+
+    this.consecutiveCorrect = 0; // Reset streak if full solution is viewed
+
+
+
+    const container = document.getElementById('stepsContainer');
+
+    const list = document.getElementById('stepsList');
+
+    container.classList.add('visible');
+
+    container.querySelector('h3').textContent = '? ????? ?????';
+
+    list.innerHTML = '';
+
+
+
+    // Pre-process steps to merge text and math
+
+    let mergedSteps = [];
+
+    for (let i = 0; i < this.currentProblem.steps.length; i++) {
+
+      let step = this.currentProblem.steps[i];
+
+      if (step.trim().endsWith(':') && i + 1 < this.currentProblem.steps.length) {
+
+        let nextStep = this.currentProblem.steps[i + 1];
+
+        if (!nextStep.includes(':')) {
+
+           step = step + ' ' + nextStep;
+
+           i++; 
+
+        }
+
+      }
+
+      mergedSteps.push(step);
+
+    }
+
+
+
+    mergedSteps.forEach((step, i) => {
+
+      const div = document.createElement('div');
+
+      div.className = 'step-item';
+
+      div.style.animationDelay = `${i * 0.1}s`;
+
+      
+
+      if (step.includes(':')) {
+
+        const parts = step.split(':');
+
+        const textPart = parts[0] + ':';
+
+        const mathPart = parts.slice(1).join(':').trim();
+
+        
+
+        const hasHebrewMath = /[?-?]/.test(mathPart);
+
+        const dirAttr = hasHebrewMath ? 'dir="rtl"' : 'dir="ltr"';
+
+        const alignAttr = hasHebrewMath ? 'text-align: right;' : 'text-align: left;';
+
+        
+
+        div.innerHTML = `<div style="display: flex; align-items: center; margin-bottom: 6px;"><span class="step-number">${i + 1}</span> <span>${textPart}</span></div>
+
+                         <div class="step-math" ${dirAttr} style="display: block; ${alignAttr} font-size: 1.1em; background: rgba(0,0,0,0.03); border-radius: 6px; padding: 6px 12px; margin-bottom: 8px;">${mathPart}</div>`;
+
+      } else {
+
+        const hasEquation = /[=<>??]/.test(step);
+
+        if (hasEquation) {
+
+          const hasHebrew = /[?-?]/.test(step);
+
+          const dirAttr = hasHebrew ? 'dir="rtl"' : 'dir="ltr"';
+
+          const alignAttr = hasHebrew ? 'text-align: right;' : 'text-align: left;';
+
+          div.innerHTML = `<div style="display: flex; align-items: center; margin-bottom: 6px;"><span class="step-number">${i + 1}</span></div>
+
+                           <div class="step-math" ${dirAttr} style="display: block; ${alignAttr} font-size: 1.1em; background: rgba(0,0,0,0.03); border-radius: 6px; padding: 6px 12px; margin-bottom: 8px;">${step}</div>`;
+
+        } else {
+
+          // Pure text block
+
+          div.innerHTML = `<div style="display: flex; align-items: center; margin-bottom: 6px;"><span class="step-number">${i + 1}</span> <span style="display: inline-block;">${step}</span></div>`;
+
+        }
+
+      }
+
+      list.appendChild(div);
+
+    });
+
+
+
+    document.getElementById('solutionBtn').disabled = true;
+
+  }
+
+
+
+  
+
+
+
+
+  // ─── Homework ───
+  loadHomework() {
+    const code = document.getElementById('hwCodeInput').value.trim();
+    if (!code) {
+      this.toast('הדבק קוד שיעורי בית');
+      return;
+    }
+
+    const config = this.hwManager.decode(code);
+    if (!this.hwManager.validate(config)) {
+      this.toast('❌ קוד שיעורי בית לא תקין');
+      return;
+    }
+
+    this.activeHomework = config;
+    this.hwResults = { total: 0, correct: 0, topics: {} };
+    this.toast(`✅ שיעורי בית נטענו: ${config.title || 'שיעורי בית'}`);
+    document.getElementById('hwCodeInput').value = '';
+    this.renderTopicGrid();
+  }
+
+  finishHomework() {
+    this.toast('🎉 סיימת את כל תרגילי שיעורי הבית!');
+    document.getElementById('problemCard').innerHTML = `
+      <div style="text-align:center; padding: 2rem;">
+        <h2 style="color:var(--accent-teal); margin-bottom: 1rem;">🎉 שיעורי הבית הושלמו! 🎉</h2>
+        <p>פתרת ${this.hwResults.total} תרגילים, מתוכם ${this.hwResults.correct} נכונים.</p>
+        <div style="margin-top: 2rem; display:flex; gap: 1rem; justify-content:center;">
+          <button class="btn btn-teal" onclick="app.exportActiveHomework()">📥 הורד דוח למורה</button>
+          <button class="btn btn-primary" onclick="app.clearHomework()">חזור למסך הראשי</button>
+        </div>
+      </div>
+    `;
+    
+    // Also record it so it's saved in tracker immediately
+    if (this.hwResults.total > 0 && this.activeHomework) {
+      this.tracker.recordHomework(this.activeHomework, this.hwResults);
+      // Copy to prevent double recording
+      this.activeHomework._recorded = true; 
+    }
+  }
+
+  clearHomework() {
+    if (this.hwResults.total > 0 && this.activeHomework && !this.activeHomework._recorded) {
+      this.tracker.recordHomework(this.activeHomework, this.hwResults);
+    }
+    this.activeHomework = null;
+    this.hwResults = { total: 0, correct: 0 };
+    this.inputHistory = [];
+    this.historyIndex = -1;
+    this.toast('שיעורי הבית הושלמו ונשמרו');
+    this.renderTopicGrid();
+    this.navigate('home');
+    
+    // Restore problemCard inner HTML for next practice
+    document.getElementById('problemCard').innerHTML = `
+      <div class="problem-number" id="problemNumber"></div>
+      <div class="problem-instruction" id="problemInstruction"></div>
+      <div class="problem-question" id="problemQuestion"></div>
+      <ul id="stepHistory" class="step-history"></ul>
+    <div class="answer-section">
+      <input type="text" class="input-field" id="answerInput" dir="ltr"
+               placeholder="הכנס תשובה או שלב ביניים..."
+               onkeydown="app.handleKeyDown(event)">
+        <button class="btn btn-primary" onclick="app.checkAnswer()">בדוק ✓</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <div class="action-buttons">
+        <button class="btn btn-secondary" onclick="app.showMistakes()" id="mistakesBtn" style="display:none; color: var(--accent-amber);">⚠️ טעויות נפוצות</button>
+        <button class="btn btn-secondary" onclick="app.showHint()" id="hintBtn">💡 רמז</button>
+        <button class="btn btn-secondary" onclick="app.showFullSolution()" id="solutionBtn">📖 הצג פתרון מלא</button>
+        <button class="btn btn-ghost" onclick="app.nextProblem()" id="nextBtn" style="display:none">
+          תרגיל הבא ←
+        </button>
+      </div>
+      <div class="steps-container" id="stepsContainer">
+        <h3>📖 פתרון מפורט</h3>
+        <div id="stepsList"></div>
+      </div>
+    `;
+  }
+
+  generateHomeworkCode() {
+    const selectedTopics = [];
+    document.querySelectorAll('#hwTopicList .hw-topic-item input:checked').forEach(cb => {
+      selectedTopics.push(cb.value);
+    });
+
+    if (selectedTopics.length === 0) {
+      this.toast('בחר לפחות נושא אחד');
+      return;
+    }
+
+    const config = {
+      title: document.getElementById('hwTitle').value.trim() || 'שיעורי בית',
+      topics: selectedTopics,
+      problemsPerTopic: parseInt(document.getElementById('hwNumProblems').value) || 5,
+      difficulty: document.getElementById('hwDifficulty').value,
+      created: new Date().toISOString()
+    };
+
+    const code = this.hwManager.encode(config);
+    if (!code) {
+      this.toast('שגיאה ביצירת הקוד');
+      return;
+    }
+
+    document.getElementById('generatedCode').style.display = 'block';
+    document.getElementById('codeText').textContent = code;
+    this.toast('✅ קוד שיעורי בית נוצר בהצלחה!');
+  }
+
+  copyCode() {
+    const code = document.getElementById('codeText').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      this.toast('📋 הקוד הועתק ללוח!');
+    }).catch(() => {
+      // Fallback
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      this.toast('📋 הקוד הועתק ללוח!');
+    });
+  }
+
+  // ─── Teacher Panel ───
+  teacherLogin() {
+    const pass = document.getElementById('teacherPass').value;
+    if (pass === this.teacherPassword) {
+      document.getElementById('teacherLogin').style.display = 'none';
+      document.getElementById('teacherPanel').classList.add('active');
+      this.renderTeacherTopics();
+    } else {
+      this.toast('❌ סיסמה שגויה');
+    }
+  }
+
+  renderTeacherTopics() {
+    const list = document.getElementById('hwTopicList');
+    list.innerHTML = '';
+    TOPICS.forEach(topic => {
+      const item = document.createElement('label');
+      item.className = 'hw-topic-item';
+      item.innerHTML = `
+        <input type="checkbox" value="${topic.id}">
+        <span>${topic.icon} ${topic.name}</span>
+      `;
+      item.querySelector('input').addEventListener('change', () => {
+        item.classList.toggle('selected', item.querySelector('input').checked);
+      });
+      list.appendChild(item);
+    });
+  }
+
+  // ─── Progress Dashboard ───
+  renderProgress() {
+    const stats = this.tracker.getTotalStats();
+    document.getElementById('statTotal').textContent = stats.total;
+    document.getElementById('statCorrect').textContent = stats.correct;
+    document.getElementById('statAccuracy').textContent = `${stats.accuracy}%`;
+    document.getElementById('statHints').textContent = stats.hints;
+
+    const tbody = document.getElementById('progressTableBody');
+    tbody.innerHTML = '';
+
+    TOPICS.forEach(topic => {
+      const t = this.tracker.data.topics[topic.id];
+      if (!t) return;
+      const acc = t.attempted > 0 ? Math.round(t.correct / t.attempted * 100) : 0;
+      const color = acc >= 80 ? 'var(--accent-green)' : acc >= 50 ? 'var(--accent-amber)' : 'var(--accent-red)';
+
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${topic.icon} ${topic.name}</td>
+        <td>${t.attempted}</td>
+        <td>${t.correct}</td>
+        <td>
+          ${acc}%
+          <div class="accuracy-bar">
+            <div class="accuracy-bar-fill" style="width:${acc}%; background:${color}"></div>
+          </div>
+        </td>
+        <td>${t.hintsUsed}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+
+
+
+  }
+
+  // ─── Export ───
+  exportMarkdown() {
+    const md = this.exportManager.generateMarkdown(this.tracker);
+    this.exportManager.download(md, this.tracker.data.studentName, 'md');
+    this.toast('📥 הדוח (MD) הורד בהצלחה!');
+  }
+
+  exportActiveHomework() {
+    if (!this.activeHomework) {
+      this.toast('אין שיעורי בית פעילים!');
+      return;
+    }
+    const txt = this.exportManager.generateHomeworkReport(this.tracker, this.activeHomework, this.hwResults);
+    this.exportManager.download(txt, (this.tracker.data.studentName || 'student') + "_homework", 'txt');
+    this.toast('📥 מוריד דוח שיעורי בית למורה...');
+  }
+
+  exportText() {
+    const txt = this.exportManager.generateText(this.tracker);
+    this.exportManager.download(txt, this.tracker.data.studentName, 'txt');
+    this.toast('📥 הדוח (TXT) הורד בהצלחה!');
+  }
+
+  exportExcel() {
+    const csv = this.exportManager.generateCSV(this.tracker);
+    this.exportManager.download(csv, this.tracker.data.studentName, 'csv');
+    this.toast('📥 הדוח (Excel) הורד בהצלחה!');
+  }
+
+
+  exportSave() {
+    const dataStr = JSON.stringify(this.tracker.data);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (this.tracker.data.studentName || 'student') + '_progress.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    this.toast('התקדמות נשמרה בהצלחה!');
+  }
+
+  importSave(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data && data.topics) {
+          this.tracker.data = data;
+          this.tracker.save();
+          this.renderProgress();
+          this.toast('התקדמות נטענה בהצלחה!');
+          document.getElementById('welcomeName').textContent = this.tracker.data.studentName || 'תלמיד';
+          this.showUser();
+          this.navigate('home');
+        } else {
+          this.toast('קובץ לא תקין');
+        }
+      } catch (err) {
+        this.toast('שגיאה בקריאת הקובץ: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+
+  copyExport() {
+    const md = this.exportManager.generateMarkdown(this.tracker);
+    navigator.clipboard.writeText(md).then(() => {
+      this.toast('📋 הדוח הועתק ללוח!');
+    }).catch(() => {
+      this.toast('שגיאה בהעתקה');
+    });
+  }
+
+  handleKeyDown(e) {
+    if (e.key === 'Enter') {
+      if (this.answered) this.nextProblem();
+      else this.checkAnswer();
+    } else if (e.key === 'ArrowUp') {
+      if (this.historyIndex > 0) {
+        this.historyIndex--;
+        e.target.value = this.inputHistory[this.historyIndex];
+        e.preventDefault();
+      }
+    } else if (e.key === 'ArrowDown') {
+      if (this.historyIndex < this.inputHistory.length - 1) {
+        this.historyIndex++;
+        e.target.value = this.inputHistory[this.historyIndex];
+        e.preventDefault();
+      } else {
+        this.historyIndex = this.inputHistory.length;
+        e.target.value = '';
+        e.preventDefault();
+      }
+    }
+  }
+
+  resetProgress() {
+    if (confirm('האם אתה בטוח? פעולה זו תמחק את כל נתוני ההתקדמות!')) {
+      const name = this.tracker.data.studentName;
+      const cls = this.tracker.data.studentClass;
+      this.tracker.reset();
+      this.tracker.data.studentName = name;
+      this.tracker.data.studentClass = cls;
+      this.tracker.save();
+      this.renderProgress();
+      this.toast('🗑️ הנתונים אופסו');
+    }
+  }
+
+  // ─── UI Helpers ───
+  toast(msg) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  showConfetti() {
+    const container = document.createElement('div');
+    container.className = 'confetti-container';
+    document.body.appendChild(container);
+
+    const colors = ['#f59e0b', '#14b8a6', '#a78bfa', '#22c55e', '#ef4444', '#3b82f6'];
+    for (let i = 0; i < 30; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.backgroundColor = randChoice(colors);
+      piece.style.animationDelay = Math.random() * 0.5 + 's';
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      piece.style.width = randInt(6, 12) + 'px';
+      piece.style.height = randInt(6, 12) + 'px';
+      container.appendChild(piece);
+    }
+
+    setTimeout(() => container.remove(), 2000);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// INITIALIZE
+// ═══════════════════════════════════════════════════
+const app = new App();
+</script>
+</body>
+</html>

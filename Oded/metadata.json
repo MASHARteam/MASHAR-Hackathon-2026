@@ -1,0 +1,6 @@
+{
+  "name": "נווט מיומנויות AI לפיזיקה",
+  "description": "מערכת הכשרה תלת-שנתית (כיתות י'-י\"ב) לרכישת מיומנויות בינה מלאכותית, הנדסת פרומפטים וניתוח נתונים בפיזיקה עבור תלמידי מרכז שוורץ-רייסמן.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

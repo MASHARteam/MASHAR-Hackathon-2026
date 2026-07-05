@@ -1,0 +1,88 @@
+﻿<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>תוצרי האקתון 2026</title>
+    <meta name="description" content="חלון ראווה לתוצרי האקתון 2026: פרויקטים, הדגמות וקישורים לתוצרים." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="topbar" aria-label="ניווט ראשי">
+        <a href="#projects" class="brand">האקתון החדשנות</a>
+        <div class="topbar-actions">
+          <a href="#projects">תוצרים</a>
+          <a href="#featured">פרויקט עומק</a>
+          <a href="#feedback">משוב האירוע</a>
+        </div>
+      </nav>
+
+      <section class="hero hero-simple" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">בזאר תוצרים והדגמות</p>
+          <h1 id="page-title">תוצרי האקתון 2026</h1>
+          <p class="hero-text">
+            הפרויקטים שנולדו בהאקתון מתכנסים לחלון ראווה אחד: כרטיס לכל תוצר,
+            תמונה מייצגת, וקישור ישיר להתנסות, מצגת או חומרי המשך כאשר הם זמינים.
+          </p>
+          <div class="hero-actions">
+            <a class="hero-button primary" href="#projects">צפייה בתוצרים</a>
+            <a class="hero-button" href="#featured">לפרויקט המפורט</a>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section class="section intro-band" id="projects" aria-labelledby="projects-title">
+        <div class="section-heading">
+          <p class="eyebrow">תערוכת התוצרים</p>
+          <h2 id="projects-title">כרטיסיות הפרויקטים</h2>
+          <p>
+            כל כרטיס מציג את שם התוצר, היוצרים, תחום הפעילות, תמונה מייצגת וקישורי המשך.
+          </p>
+        </div>
+        <div class="filters" aria-label="סינון כרטיסיות">
+          <button class="filter-button active" type="button" data-filter="all">כל התוצרים</button>
+          <button class="filter-button" type="button" data-filter="linked">עם קישור</button>
+          <button class="filter-button" type="button" data-filter="featured">פרויקט עומק</button>
+          <button class="filter-button" type="button" data-filter="soon">בקרוב</button>
+        </div>
+        <div class="project-grid" id="project-grid"></div>
+      </section>
+
+      <section class="section featured-section" id="featured" aria-labelledby="featured-title">
+        <div class="section-heading">
+          <p class="eyebrow">זרקור</p>
+          <h2 id="featured-title">מסלול למידה אישי מבוסס AI</h2>
+          <p>
+            פרויקט עומק המשלב פיזיקה חקרנית, שאלון אפיון, מחולל סילבוס וצ׳אט יועץ פדגוגי.
+          </p>
+        </div>
+        <div id="featured-project"></div>
+      </section>
+
+      <section class="section feedback-section" id="feedback" aria-labelledby="feedback-title">
+        <div class="section-heading">
+          <p class="eyebrow">משוב המשתתפים</p>
+          <h2 id="feedback-title">מה למדנו מההאקתון</h2>
+          <p>
+            סיכום קריא של תובנות המשתתפים: מה עבד היטב, איפה נוצרה אנרגיה להמשך,
+            ומה כדאי לשפר לקראת האירועים הבאים.
+          </p>
+        </div>
+        <div id="feedback-summary"></div>
+      </section>
+    </main>
+
+    <dialog class="project-dialog" id="project-dialog" aria-labelledby="dialog-title">
+      <button class="dialog-close" type="button" aria-label="סגירת חלון">×</button>
+      <div id="dialog-content"></div>
+    </dialog>
+
+    <script src="content.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
+

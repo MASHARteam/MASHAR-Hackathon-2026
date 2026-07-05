@@ -1,0 +1,6 @@
+{
+  "name": "Waves, Music and Technology",
+  "description": "מערכת לימודית ואינטראקטיבית מתקדמת לחקר גלים, מוזיקה וטכנולוגיה עם סימולציות בזמן אמת, זיהוי תדרים מהמיקרופון ומחולל צלילים",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
